@@ -1,31 +1,86 @@
-<script lang="ts" setup>
-import { ref } from 'vue'
-import UserField from '../user-components/UserField.vue'
+<script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router'
 
-const testModel = ref('123456789 123456789 123456789')
+import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <div class="flex flex-col gap-y-4">
-    <div class="grid grid-cols-3 gap-3 bg-slate-300 p-5">
-      <h6 class="col-span-full">Grid</h6>
+  <header>
+    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-      <UserField v-for="key in 3" :key="key" v-model="testModel" label="Тест" />
+    <div class="wrapper">
+      <HelloWorld msg="You did it!" />
+
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
+      </nav>
     </div>
+  </header>
 
-    <div class="flex flex-col gap-y-4 bg-slate-300 p-5">
-      <h6 class="col-span-full">Flex without wrap</h6>
-
-      <div class="flex gap-3">
-        <UserField v-for="key in 3" :key="key" v-model="testModel" class="w-1/3" label="Тест" />
-      </div>
-    </div>
-
-    <div class="flex flex-col gap-y-4 bg-slate-300 p-5">
-      <h6 class="col-span-full">Flex wrap, width: 300px</h6>
-      <div class="flex flex-wrap gap-3">
-        <UserField v-for="key in 9" :key="key" v-model="testModel" class="w-[300px]" label="Тест" />
-      </div>
-    </div>
-  </div>
+  <RouterView />
 </template>
+
+<style scoped>
+header {
+  max-height: 100vh;
+  line-height: 1.5;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+nav {
+  margin-top: 2rem;
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+}
+
+nav a.router-link-exact-active {
+  color: var(--color-text);
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
+
+nav a {
+  display: inline-block;
+  border-left: 1px solid var(--color-border);
+  padding: 0 1rem;
+}
+
+nav a:first-of-type {
+  border: 0;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    place-items: flex-start;
+  }
+
+  nav {
+    margin-top: 1rem;
+    margin-left: -1rem;
+
+    padding: 1rem 0;
+    font-size: 1rem;
+    text-align: left;
+  }
+}
+</style>

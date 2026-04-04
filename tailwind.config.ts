@@ -1,5 +1,9 @@
 import type { Config } from 'tailwindcss'
 
 export default {
-  content: ['./src/**/*.{html,vue,ts}', 'cypress/support/component-index.html'],
+  content: ['./src/**/*.{html,vue,js}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
 } satisfies Config

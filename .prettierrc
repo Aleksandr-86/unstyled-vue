@@ -1,0 +1,77 @@
+{
+  "singleQuote": true,
+  "semi": false,
+  "printWidth": 120,
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^(vue)(.*)$",
+    "",
+    "^(src|app|boot)/(.*)",
+    "",
+    "<TYPES>",
+    "",
+    "^[./]"
+  ],
+  "importOrderParserPlugins": ["typescript", "classProperties", "decorators-legacy", "jsx"],
+  "importOrderTypeScriptVersion": "5.3.3",
+  "tailwindConfig": "./tailwind.config.ts",
+  "plugins": [
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-css-order",
+    "prettier-plugin-organize-attributes",
+    "prettier-plugin-tailwindcss"
+  ],
+  "attributeGroups": [
+    "^:?is$",
+    "^v-for$",
+    "^v-(if|else-if|else)$",
+    "^v-show$",
+    "^v-cloak",
+    "^v-pre",
+    "^v-once",
+    "^:?id$",
+    "^:?ref$",
+    "^:?key$",
+    "^v-bind$",
+    "^v-model",
+    "^class$",
+    "^:class$",
+    "$DEFAULT",
+    "^aria-",
+    "^@",
+    "^v-html$",
+    "^v-text$"
+  ],
+  "attributeSort": "ASC",
+  "overrides": [
+    {
+      "files": "*.json",
+      "options": {
+        "singleQuote": false
+      }
+    },
+    {
+      "files": "*.html",
+      "options": {
+        "singleQuote": false
+      }
+    },
+    {
+      "files": ".*rc",
+      "options": {
+        "singleQuote": false,
+        "parser": "json"
+      }
+    },
+    {
+      "files": ".ts",
+      "options": {
+        "parser": "typescript",
+        "importOrderParserPlugins": ["typescript"]
+      }
+    }
+  ]
+}

@@ -1,8 +1,11 @@
+import './assets/main.css'
+
 import { createApp } from 'vue'
 import App from './App.vue'
-import './assets/main.css'
-import VField from '@/components/field/VField.vue'
+import router from './router'
 
-const app = createApp(App).component('VField', VField)
+const app = createApp(App)
+
+app.use(router)
 
 app.mount('#app')
