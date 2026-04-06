@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import VInput from '@/components/input/VInput.vue'
+import VInput from '@/components/input-controls/input/VInput.vue'
 
 import { computed } from 'vue'
 
-import type { InputEmits, InputProps } from '@/components/input/VInput.vue'
+import type { InputEmits, InputProps } from '@/components/input-controls/input/VInput.vue'
 
 export interface FieldProps extends InputProps {
   /** Текст перед полем ввода */
@@ -31,7 +31,7 @@ const hasError = computed(() => true)
       <slot :has-error="hasError" name="prepend"></slot>
     </div>
 
-    <div v-if="prefix" class="v-field__prefix">
+    <div v-if="prefix" class="v-field__prefix test">
       <p>{{ prefix }}</p>
     </div>
 
