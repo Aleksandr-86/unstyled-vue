@@ -1,6 +1,5 @@
 import './assets/main.css'
 
-// import globalComponents from './plugins/global-components'
 import globalComponents from '@/plugins/global-components'
 
 import { createApp } from 'vue'

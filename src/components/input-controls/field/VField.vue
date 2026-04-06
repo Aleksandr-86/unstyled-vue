@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import VInput from '@/components/input-controls/input/VInput.vue'
-
 import { computed } from 'vue'
 
 import type { InputEmits, InputProps } from '@/components/input-controls/input/VInput.vue'
@@ -18,7 +16,7 @@ interface FieldEmits extends InputEmits {
   (e: 'input', value: string): void
 }
 
-const emit = defineEmits<FieldEmits>()
+defineEmits<FieldEmits>()
 
 const model = defineModel({ type: String })
 
@@ -60,8 +58,8 @@ const hasError = computed(() => true)
 
   &__input {
     outline: none;
-    background-color: transparent;
     background-color: wheat;
+    // background-color: transparent;
     width: 100%;
     height: 100%;
   }

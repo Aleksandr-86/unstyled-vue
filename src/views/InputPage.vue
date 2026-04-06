@@ -1,8 +1,4 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-  <VInput label="Тест"/>
+  <VInput />
   <h1>Страница компонента VInput</h1>
 </template>

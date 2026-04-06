@@ -6,8 +6,8 @@ import { RouterLink, RouterView } from 'vue-router'
   <header>
     <div class="wrapper">
       <nav>
-        <RouterLink to="/input">VInput</RouterLink>
-        <RouterLink to="/field">VField</RouterLink>
+        <RouterLink :to="{ name: 'input' }">VInput</RouterLink>
+        <RouterLink :to="{ name: 'field' }">VField</RouterLink>
       </nav>
     </div>
   </header>
