@@ -6,8 +6,8 @@ import { RouterLink, RouterView } from 'vue-router'
   <header>
     <div class="wrapper">
       <nav>
-        <RouterLink to="/">Домашняя страница</RouterLink>
-        <RouterLink to="/about">О проекте</RouterLink>
+        <RouterLink to="/input">VInput</RouterLink>
+        <RouterLink to="/field">VField</RouterLink>
       </nav>
     </div>
   </header>
@@ -43,7 +43,6 @@ nav a.router-link-exact-active:hover {
 
 nav a {
   display: inline-block;
-  border-left: 1px solid var(--color-border);
   padding: 0 1rem;
 }
 

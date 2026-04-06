@@ -1,7 +1,3 @@
-<script setup lang="ts"></script>
-
 <template>
-  <main>
-    <div>Домашняя страница</div>
-  </main>
+  <h1>Страница компонента VField</h1>
 </template>
