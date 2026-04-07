@@ -12,7 +12,8 @@
     "type-check": "vue-tsc --build",
     "lint": "run-s lint:*",
     "lint:eslint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "test-ct": "playwright test -c playwright-ct.config.ts --ui"
   },
   "dependencies": {
     "@tailwindcss/vite": "4.2.2",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.7.1",
+    "@playwright/experimental-ct-vue": "1.59.1",
     "@playwright/test": "1.59.1",
     "@tsconfig/node24": "24.0.4",
     "@types/jsdom": "28.0.1",

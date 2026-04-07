@@ -4,7 +4,7 @@ import { h, ref, watch } from 'vue'
 export interface InputProps {
   /** Область текста вместо поля ввода */
   area?: boolean
-  /** Автозавершение */
+  /** Автозаполнение */
   autocomplete?: string
   /** Отключённое состояние поля ввода */
   disabled?: boolean
