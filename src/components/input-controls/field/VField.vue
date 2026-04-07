@@ -30,7 +30,7 @@ const hasError = computed(() => true)
     </div>
 
     <div v-if="prefix" class="v-field__prefix">
-      <p class="overflow-auto">{{ prefix }}</p>
+      <p>{{ prefix }}</p>
     </div>
 
     <VInput :id v-model="model" maxlength="5" minlength="3" type="text" />
