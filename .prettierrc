@@ -15,9 +15,11 @@
     "",
     "^[./]"
   ],
-  "importOrderParserPlugins": ["typescript", "classProperties", "decorators-legacy", "jsx"],
-  "importOrderTypeScriptVersion": "5.3.3",
+  "importOrderParserPlugins": ["typescript"],
+  "importOrderTypeScriptVersion": "6.0.2",
   "tailwindConfig": "./tailwind.config.ts",
+  "tailwindSortClasses": true,
+  "tailwindFormatter": "tailwindcss",
   "plugins": [
     "@ianvs/prettier-plugin-sort-imports",
     "prettier-plugin-css-order",

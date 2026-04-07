@@ -29,11 +29,11 @@ const hasError = computed(() => true)
       <slot :has-error="hasError" name="prepend"></slot>
     </div>
 
-    <div v-if="prefix" class="v-field__prefix test">
-      <p>{{ prefix }}</p>
+    <div v-if="prefix" class="v-field__prefix">
+      <p class="overflow-auto">{{ prefix }}</p>
     </div>
 
-    <VInput v-model="model" maxlength="5" minlength="3" :id />
+    <VInput :id v-model="model" maxlength="5" minlength="3" type="text" />
 
     <div v-if="suffix" class="v-field__suffix">
       <p>{{ suffix }}</p>
