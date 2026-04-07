@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { h, ref, watch } from 'vue'
-
 export interface InputProps {
   /** Область текста вместо поля ввода */
   area?: boolean
@@ -24,13 +22,9 @@ export interface InputProps {
   type?: 'email' | 'hidden' | 'number' | 'password' | 'search' | 'tel' | 'text'
 }
 
-interface Props extends InputProps {
-  /** Модель */
-  modelValue?: string
-}
+const model = defineModel({ type: String })
 
 const {
-  modelValue,
   area,
   autocomplete = 'off',
   disabled,
@@ -41,51 +35,28 @@ const {
   placeholder,
   readonly,
   type = 'text',
-} = defineProps<Props>()
+} = defineProps<InputProps>()
 
 export interface InputEmits {
   (e: 'update:modelValue', value: string): void
   (e: 'input', value: string): void
 }
 
-const emit = defineEmits<InputEmits>()
-
-const lastValue = ref<string | null>(null)
-const display = ref(modelValue)
-
-watch(
-  () => modelValue,
-  (newValue) => {
-    if (newValue !== lastValue.value) {
-      display.value = modelValue
-    }
-  },
-)
-
-function onInput({ target }: { target: EventTarget | null }) {
-  if (target !== null) {
-    const { value } = target as HTMLInputElement | HTMLTextAreaElement
-    emit('update:modelValue', value)
-  }
-}
-
-function Render() {
-  return h(area ? 'textarea' : 'input', {
-    value: modelValue,
-    onInput,
-    autocomplete,
-    disabled,
-    id,
-    maxlength,
-    minlength,
-    name,
-    placeholder,
-    readonly,
-    type,
-  })
-}
+defineEmits<InputEmits>()
 </script>
 
 <template>
-  <Render />
+  <component
+    :is="area ? 'textarea' : 'input'"
+    :id
+    v-model="model"
+    :autocomplete
+    :disabled
+    :maxlength
+    :minlength
+    :name
+    :placeholder
+    :readonly
+    :type
+  />
 </template>
