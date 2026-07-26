@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import type { ExampleState } from '@docs/.vitepress/theme/components/ExampleContainer.vue'
 import { computed } from 'vue'
 
 import type { BaseInputModel } from '@/index.ts'
 
-import type { ExampleState } from '../../../docs/.vitepress/theme/components/ExampleContainer.vue'
-
 const model = defineModel<BaseInputModel>()
 
-const { error } = defineProps<ExampleState & { placeholder?: string; withStates?: boolean }>()
+interface ExampleInput extends ExampleState {
+  kind?: 'base' | 'use-check'
+  placeholder?: string
+  withStates?: boolean
+}
+
+const { error } = defineProps<ExampleInput>()
 
 // #region example-input-basic-classes
 const basicClasses =

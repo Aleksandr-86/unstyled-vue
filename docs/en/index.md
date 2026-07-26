@@ -15,7 +15,7 @@ hero:
       link: /en/components/
     - theme: brand
       text: Composables
-      link: /en/composables/
+      link: /en/composables/use-checkbox
 
 features:
   - title: TypeScript

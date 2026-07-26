@@ -35,14 +35,13 @@ const returnsCols: TableCol<ComposableReturnValue>[] = [
 
 <template>
   <div class="composable-table">
-    <h3>{{ data.name }}</h3>
     <div>{{ data.description[lang] }}</div>
 
     <BaseTable :cols="paramsCols" :headers="paramsHeaders" :rows="data.parameters">
       <template #description="{ row }">
         <div>
           <div>{{ row.description[lang].replace(/\.$/, '') }}</div>
-          <div class="type-color">{{ row.type }}</div>
+          <div class="text-code">{{ row.type }}</div>
         </div>
       </template>
     </BaseTable>
@@ -58,7 +57,7 @@ const returnsCols: TableCol<ComposableReturnValue>[] = [
           <template v-if="row.parameters.length > 0">
             <div v-for="(param, i) in row.parameters" :key="i">
               <span>{{ param.name }}:</span>
-              <span class="type-color">
+              <span class="text-code">
                 {{ ` ${param.type} ` }}
               </span>
               <span>
@@ -66,7 +65,7 @@ const returnsCols: TableCol<ComposableReturnValue>[] = [
               </span>
             </div>
           </template>
-          <div class="highlighted-text">{{ row.returnValue }}</div>
+          <div class="text-code">{{ row.returnValue }}</div>
         </div>
       </template>
     </BaseTable>

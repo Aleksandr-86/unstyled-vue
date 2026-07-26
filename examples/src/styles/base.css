@@ -44,14 +44,20 @@
   --color-error: var(--red-500);
   --color-warning: var(--amber-500);
   --color-disabled: var(--neutral-300);
-
   --color-label: var(--cloud-sky);
   --color-label-inverse: var(--color-background);
+
   --color-error: var(--red-500);
   --color-required: var(--amber-500);
   --color-input-border: hsl(0, 0%, 46%);
   --color-input-border-hover: hsl(0, 0%, 31%);
   --color-input-bg: transparent;
+
+  --color-btn-label: var(--color-background);
+  --color-btn-label-bg: var(--color-label);
+
+  --color-btn-success: var(--color-background);
+  --color-btn-success-bg: var(--color-success);
 }
 
 /** Тёмная тема */
@@ -69,19 +75,27 @@
   --color-error: var(--rose-400);
   --color-warning: var(--amber-400);
   --color-disabled: var(--neutral-200);
-
   --color-label: var(--blue-300);
   --color-label-inverse: var(--color-background);
+
   --color-error: var(--rose-400);
   --color-required: var(--amber-400);
   --color-input-border: hsl(0, 0%, 52%);
   --color-input-border-hover: hsl(0, 0%, 67%);
   --color-input-bg: hsl(0, 0%, 23%);
+
+  --color-btn-label: var(--color-label);
+  --color-btn-label-bg: transparent;
+
+  --color-btn-success: var(--color-success);
+  --color-btn-success-bg: transparent;
 }
 
 /* Сопоставление семантических переменных с пользовательскими классами Tailwind */
 @theme inline {
   --color-my-body-background: var(--color-background);
+  --color-my-card: var(--color-card);
+  --color-my-divider: var(--color-divider);
   --color-my-body-text: var(--color-text);
 
   --shadow-my-card: 2px 3px 10px 0 var(--color-border);
@@ -90,15 +104,19 @@
 
   --color-my-switch-body: var(--color-switch-body);
   --color-my-primary: var(--color-primary);
-
-  --color-my-divider: var(--color-divider);
+  --color-my-success: var(--color-success);
   --color-my-label: var(--color-label);
   --color-my-label-inverse: var(--color-label-inverse);
-  --color-my-card: var(--color-card);
+
   --color-my-error: var(--color-error);
   --color-my-required: var(--color-required);
-
   --color-my-input-border: var(--color-input-border);
   --color-my-input-border-hover: var(--color-input-border-hover);
   --color-my-input-bg: var(--color-input-bg);
+
+  --color-my-btn-label: var(--color-btn-label);
+  --color-my-btn-label-bg: var(--color-btn-label-bg);
+
+  --color-my-btn-success: var(--color-btn-success);
+  --color-my-btn-success-bg: var(--color-btn-success-bg);
 }

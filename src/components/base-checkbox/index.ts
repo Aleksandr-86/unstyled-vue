@@ -16,7 +16,7 @@ export interface BaseCheckboxProps<T extends CheckboxItem = boolean> {
    */
   ariaInvalid?: boolean | 'grammar' | 'spelling'
   /**
-   * Текстовая строка, описывающая элемент для программ экранного доступа (когда визуальный текст отсутствует или недостаточен).
+   * @ru Текстовая строка, описывающая элемент для программ экранного доступа (когда визуальный текст отсутствует или недостаточен).
    * @en A text string that labels the element for screen readers (used when the visual label is missing or insufficient).
    */
   ariaLabel?: string

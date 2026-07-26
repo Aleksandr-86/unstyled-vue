@@ -114,7 +114,7 @@ This is necessary because a `div` element, serving as a container for an `SVG im
 
 ## Component architecture notes
 
-The component utilizes a generic model type of `T | T[]`, allowing the model to be either a single value or an array of values. A single `boolean` type is used by default. This typing ensures basic type safety. The examples below illustrate errors successfully intercepted by the `TypeScript` compiler.
+The generic type allows the model to be either a single value or an array of values. A single `boolean` type is used by default. This typing ensures basic type safety. The examples below illustrate errors successfully intercepted by the `TypeScript` compiler.
 
 ```vue
 <!-- BaseCheckbox standalone usage -->
