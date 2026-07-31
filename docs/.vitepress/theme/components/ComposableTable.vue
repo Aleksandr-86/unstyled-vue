@@ -46,7 +46,7 @@ const returnsCols: TableCol<ComposableReturnValue>[] = [
       </template>
     </BaseTable>
 
-    <BaseTable :cols="returnsCols" :headers="returnsHeaders" :rows="data.returns">
+    <BaseTable v-if="0" :cols="returnsCols" :headers="returnsHeaders" :rows="data.returns">
       <template #description="{ row }">
         <div>
           <div>

@@ -7,8 +7,8 @@ export interface ValidationErrorPayload {
   uid: string
 }
 
+// #region use-validate-options
 export interface UseValidateOptions {
-  /** Динамическое отключение валидации поля */
   disabled?: MaybeRefOrGetter<boolean>
   error?: MaybeRefOrGetter<boolean>
   errorMessage?: MaybeRefOrGetter<string>
@@ -19,3 +19,4 @@ export interface UseValidateOptions {
 
   onValidationError?: (payload: ValidationErrorPayload) => void
 }
+// #endregion use-validate-options

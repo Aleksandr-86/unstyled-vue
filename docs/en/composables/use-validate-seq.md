@@ -13,7 +13,7 @@ const error1 = ref(false)
 
 <ExampleContainer>
     <div>
-    <ExampleUseValidateSeq placeholder="Обязательное поле" label="Логин" :error="error1" />
+    <Example1UseValidateSeq placeholder="Обязательное поле" label="Логин" :error="error1" />
     {{error1}}
     <button @click="error1 = !error1">Внешний триггер ошибки</button>
     </div>

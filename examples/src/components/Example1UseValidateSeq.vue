@@ -1,5 +1,7 @@
 <!-- #region example-1-use-validate-seq -->
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import type { ExampleState } from '../../../docs/.vitepress/theme/components/ExampleContainer.vue'
 import { useValidateSeq } from '../../../src/composables/useValidateSeq'
 import type { BaseInputModel } from '../../../src/index'
@@ -12,9 +14,11 @@ const model = defineModel<BaseInputModel>()
 interface ExampleUseValidateSeqProps extends ExampleState {
   label: string
   placeholder: string
+
+  timeout?: number
 }
 
-defineProps<ExampleUseValidateSeqProps>()
+const { timeout = 12000 } = defineProps<ExampleUseValidateSeqProps>()
 
 /** Синхронное правило */
 const isRequiredSync = (value: string) => !!value || 'Поле обязательно для заполнения'
@@ -27,7 +31,32 @@ const checkRemoteAsync = async (value: string) => {
 
 const rules = [isRequiredSync, checkRemoteAsync]
 
-const { errExist, errMessage, isValidating, reset, uid, validate } = useValidateSeq(model, { rules })
+const error = ref(false)
+const errorMessage = ref<string>('')
+const disabled = ref(true)
+
+function onValidationError(evt: any) {
+  console.log('Example onValidationError', evt)
+}
+
+const { errExist, errMessage, isValidating, reset, uid, validate } = useValidateSeq(model, {
+  rules,
+  timeout,
+  error,
+  errorMessage,
+
+  onValidationError,
+})
+
+function invokeValidate() {
+  validate()
+    .then((evt) => {
+      console.log('invokeValidate', evt)
+    })
+    .catch((e) => {
+      console.log('error', e)
+    })
+}
 </script>
 
 <template>
@@ -45,6 +74,7 @@ const { errExist, errMessage, isValidating, reset, uid, validate } = useValidate
           class="selection:text-my-body-background w-full py-2.5 ps-4 text-ellipsis outline-none"
           :class="errExist ? 'selection:bg-my-error selection:' : 'selection:bg-my-label'"
           :placeholder
+          @keydown.enter="invokeValidate"
         />
         <BaseLoader v-if="isValidating" :class="errExist ? 'text-my-error' : 'text-my-label'" />
         <BaseClear
@@ -60,7 +90,7 @@ const { errExist, errMessage, isValidating, reset, uid, validate } = useValidate
 
     <div class="flex flex-wrap gap-3">
       <ExampleButton kind="success" label="Сбросить ошибку" @click="reset" />
-      <ExampleButton label="Проверить вручную" @click="validate" />
+      <ExampleButton label="Проверить вручную" @click="invokeValidate" />
     </div>
   </div>
 </template>

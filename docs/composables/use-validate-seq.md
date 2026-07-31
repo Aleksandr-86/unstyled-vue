@@ -10,6 +10,8 @@ const inputModel = ref('admin')
 
 <ComposableTable class="mt-3" :data="data.useValidateSeq"/>
 
+<<< @/../src/types/common-types.ts#use-validate-options
+
 ## Примеры
 
 ::: info Информация
@@ -36,9 +38,4 @@ placeholder="Обязательное поле"
 />
 </ExampleContainer>
 
-<!-- <ExampleContainer> <div>
-    <ExampleUseValidateSeq placeholder="Обязательное поле" label="Логин" :error="error1" />
-    {{error1}}
-    <button @click="error1 = !error1">Внешний триггер ошибки</button>
-    </div>
-</ExampleContainer> -->
+В следующем примере свойство 
