@@ -8,7 +8,7 @@ import {
   ref,
   toValue,
   useId,
-  watchEffect,
+  watch,
 } from 'vue'
 
 import type { UseValidateOptions } from '../types/common-types'
@@ -24,7 +24,7 @@ interface UseValidateReturn {
    * Вычисляемое свойство отображающее сообщение об ошибке
    * (A computed property that displays an error message)
    */
-  errMessage: ComputedRef<string>
+  errMessage: ComputedRef<string | undefined>
   /**
    * Реактивная переменная для отслеживания процесса валидации
    * (Reactive variable for tracking the validation process)
@@ -42,8 +42,8 @@ interface UseValidateReturn {
    */
   reset(): void
   /**
-   * Асинхронная функция инициирующая валидацию полей
-   * (An asynchronous function that initiates field validation)
+   * Асинхронная функция инициирующая валидацию полей. Успешная валидация возвращает true. Не успешная - объект типа ValidationError.
+   * (Asynchronous function that initiates field validation. Successful validation returns true. Failed - an object of the ValidationError type.)
    */
   validate(): Promise<boolean>
 }
@@ -67,7 +67,7 @@ export function useValidateSeq<T = unknown>(
 ): UseValidateReturn {
   const uid = useId()
   const formContext = inject(FormContextKey, null)
-  const timeoutMs = options.timeout
+  const timeoutMs = options.timeout?.ms
 
   const isValidating = ref(false)
 
@@ -75,39 +75,46 @@ export function useValidateSeq<T = unknown>(
   const internalErrMessage = ref('')
 
   const errExist = computed(() => {
-    if (toValue(options.disabled)) return false
+    if (toValue(options.disabled)) {
+      return false
+    }
 
     const externalError = toValue(options.error)
-    return externalError ?? internalErrExist.value
+    return externalError || internalErrExist.value
   })
 
   const errMessage = computed(() => {
-    if (toValue(options.disabled)) return ''
+    if (toValue(options.disabled)) {
+      return ''
+    }
 
     const externalError = toValue(options.error)
     const externalMessage = toValue(options.errorMessage)
 
     if (externalError) {
-      return externalMessage || 'Ошибка валидации (внешняя)'
+      return externalMessage || ''
     }
 
     return internalErrMessage.value
   })
 
-  watchEffect(() => {
-    if (toValue(options.disabled)) {
-      reset()
-    }
-  })
+  watch(
+    () => options.disabled,
+    () => {
+      if (toValue(options.disabled)) {
+        reset()
+      }
+    },
+  )
 
-  function invokeValidationError(message: string) {
+  function invokeValidationError(message: string | undefined) {
     if (toValue(options.disabled)) return
 
     internalErrExist.value = true
-    internalErrMessage.value = message
+    internalErrMessage.value = message || ''
 
     if (options.onValidationError) {
-      options.onValidationError({ uid, errorMessage: message })
+      options.onValidationError({ uid, errorMessage: message || '' })
     }
   }
 
@@ -124,7 +131,7 @@ export function useValidateSeq<T = unknown>(
 
       if (externalError === true) {
         const externalMessage = toValue(options.errorMessage)
-        invokeValidationError(externalMessage || 'Ошибка валидации (внешняя)')
+        invokeValidationError(externalMessage)
         return false
       }
 
@@ -137,34 +144,43 @@ export function useValidateSeq<T = unknown>(
 
           if (typeof timeoutMs === 'number' && timeoutMs > 0) {
             const timeoutPromise = new Promise<string | boolean | void>((_, reject) => {
-              timeoutId = setTimeout(() => reject(new Error('Validation timeout')), timeoutMs)
+              timeoutId = setTimeout(() => reject(new Error('[Unstyled-vue]: Timeout.')), timeoutMs)
             })
 
             result = await Promise.race([rulePromise, timeoutPromise])
 
-            if (timeoutId) clearTimeout(timeoutId)
+            if (timeoutId) {
+              clearTimeout(timeoutId)
+            }
           } else {
             result = await rulePromise
           }
 
-          if (toValue(options.disabled)) return true
+          if (toValue(options.disabled)) {
+            return true
+          }
 
           if (result === false || typeof result === 'string') {
-            invokeValidationError(typeof result === 'string' ? result : 'Неверное значение')
+            invokeValidationError(result === false ? '' : result)
             return false
           }
         } catch (error: unknown) {
-          if (timeoutId) clearTimeout(timeoutId)
-          if (toValue(options.disabled)) return true
+          if (timeoutId) {
+            clearTimeout(timeoutId)
+          }
+
+          if (toValue(options.disabled)) {
+            return true
+          }
 
           if (error instanceof Error) {
             invokeValidationError(
-              error.message === 'Validation timeout'
-                ? `Превышено время ожидания проверки (${timeoutMs}мс)`
-                : 'Ошибка при выполнении проверки',
+              error.message === '[Unstyled-vue]: Timeout.'
+                ? options.timeout?.message
+                : '[Unstyled-vue]: An error occurred during validation.',
             )
           } else {
-            invokeValidationError('Неизвестная ошибка при выполнении проверки')
+            invokeValidationError('[Unstyled-vue]: Unknown error during validation.')
           }
 
           return false
@@ -192,7 +208,10 @@ export function useValidateSeq<T = unknown>(
   if (formContext) {
     const focus = () => {
       const el = document.getElementById(uid)
-      if (el) el.focus()
+
+      if (el) {
+        el.focus()
+      }
     }
 
     formContext.registerFormField(uid, validate, reset, isValidating, focus)

@@ -17,7 +17,7 @@ import BaseCheckbox from '../../../src/components/base-checkbox/BaseCheckbox.vue
 import ExampleCheckbox from '../../../examples/src/components/ExampleCheckbox.vue'
 import BaseInput from '../../../src/components/base-input/BaseInput.vue'
 import ExampleInput from '../../../examples/src/components/ExampleInput.vue'
-import Example1UseValidateSeq from '../../../examples/src/components/Example1UseValidateSeq.vue'
+import ExampleRu1UseValidateSeq from '../../../examples/src/components/use-validate-seq/ExampleRu1UseValidateSeq.vue'
 import BaseTable from '../../../src/components/base-table/BaseTable.vue'
 import ExampleTable from '../../../examples/src/components/ExampleTable.vue'
 import BaseTextarea from '../../../src/components/base-textarea/BaseTextarea.vue'
@@ -38,7 +38,7 @@ export default {
     app.component('ExampleCheckbox', ExampleCheckbox)
     app.component('BaseInput', BaseInput)
     app.component('ExampleInput', ExampleInput)
-    app.component('Example1UseValidateSeq', Example1UseValidateSeq)
+    app.component('ExampleRu1UseValidateSeq', ExampleRu1UseValidateSeq)
     app.component('BaseTable', BaseTable)
     app.component('ExampleTable', ExampleTable)
     app.component('BaseTextarea', BaseTextarea)

@@ -2,7 +2,7 @@ import type { MaybeRefOrGetter } from 'vue'
 
 import type { Rule } from './validation'
 
-export interface ValidationErrorPayload {
+export interface ValidationError {
   errorMessage: string
   uid: string
 }
@@ -15,8 +15,11 @@ export interface UseValidateOptions {
   immediate?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   rules?: MaybeRefOrGetter<Rule<any>[]>
-  timeout?: number
+  timeout?: {
+    ms: number
+    message?: string
+  }
 
-  onValidationError?: (payload: ValidationErrorPayload) => void
+  onValidationError?: (payload: ValidationError) => void
 }
 // #endregion use-validate-options

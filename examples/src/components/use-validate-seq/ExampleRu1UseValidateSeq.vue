@@ -1,13 +1,15 @@
-<!-- #region example-1-use-validate-seq -->
+<!-- #region example-ru-1-use-validate-seq -->
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import type { ExampleState } from '../../../docs/.vitepress/theme/components/ExampleContainer.vue'
-import { useValidateSeq } from '../../../src/composables/useValidateSeq'
-import type { BaseInputModel } from '../../../src/index'
-import BaseClear from './base/BaseClear.vue'
-import BaseLoader from './base/BaseLoader.vue'
-import ExampleButton from './ExampleButton.vue'
+import type { ExampleState } from '../../../../docs/.vitepress/theme/components/ExampleContainer.vue'
+import BaseInput from '../../../../src/components/base-input/BaseInput.vue'
+import { useValidateSeq } from '../../../../src/composables/useValidateSeq'
+import type { BaseInputModel } from '../../../../src/index'
+import type { ValidationError } from '../../../../src/types/common-types.ts'
+import BaseClear from '../base/BaseClear.vue'
+import BaseLoader from '../base/BaseLoader.vue'
+import ExampleButton from '../ExampleButton.vue'
 
 const model = defineModel<BaseInputModel>()
 
@@ -15,10 +17,13 @@ interface ExampleUseValidateSeqProps extends ExampleState {
   label: string
   placeholder: string
 
-  timeout?: number
+  timeout?: {
+    ms: number
+    message?: string
+  }
 }
 
-const { timeout = 12000 } = defineProps<ExampleUseValidateSeqProps>()
+const { timeout } = defineProps<ExampleUseValidateSeqProps>()
 
 /** Синхронное правило */
 const isRequiredSync = (value: string) => !!value || 'Поле обязательно для заполнения'
@@ -29,14 +34,15 @@ const checkRemoteAsync = async (value: string) => {
   return value !== 'admin' || 'Этот логин уже занят'
 }
 
+/** Массив правил */
 const rules = [isRequiredSync, checkRemoteAsync]
 
+const disabled = ref(false)
 const error = ref(false)
 const errorMessage = ref<string>('')
-const disabled = ref(true)
 
-function onValidationError(evt: any) {
-  console.log('Example onValidationError', evt)
+function onValidationError(evt: ValidationError) {
+  console.log('onValidationError', evt)
 }
 
 const { errExist, errMessage, isValidating, reset, uid, validate } = useValidateSeq(model, {
@@ -44,6 +50,7 @@ const { errExist, errMessage, isValidating, reset, uid, validate } = useValidate
   timeout,
   error,
   errorMessage,
+  disabled,
 
   onValidationError,
 })
@@ -51,16 +58,39 @@ const { errExist, errMessage, isValidating, reset, uid, validate } = useValidate
 function invokeValidate() {
   validate()
     .then((evt) => {
-      console.log('invokeValidate', evt)
+      console.warn('invokeValidate evt', evt)
     })
-    .catch((e) => {
-      console.log('error', e)
+    .catch((err) => {
+      console.warn('invokeValidate err', err)
     })
 }
 </script>
 
 <template>
   <div class="flex w-full flex-col items-end gap-y-3">
+    <div class="flex flex-wrap gap-2 text-sm">
+      <button
+        class="rounded-md p-1"
+        :class="error ? 'bg-my-error/30 text-my-error' : 'bg-my-divider/30'"
+        @click="error = !error"
+      >
+        error: {{ error }}
+      </button>
+      <BaseInput
+        v-model="errorMessage"
+        class="w-40 rounded-md px-2 py-1 text-ellipsis"
+        :class="error ? 'bg-my-error/30 text-my-error' : 'bg-my-divider/30'"
+        placeholder="errorMessage"
+      />
+      <button
+        class="rounded-md p-1"
+        :class="disabled ? 'bg-my-divider/30' : 'bg-my-success/30'"
+        @click="disabled = !disabled"
+      >
+        validation: {{ disabled ? 'disabled' : 'enabled' }}
+      </button>
+    </div>
+
     <div class="flex w-full flex-col gap-y-1">
       <label class="text-xs" :for="uid">{{ label }}</label>
 
@@ -72,7 +102,11 @@ function invokeValidate() {
           :id="uid"
           v-model="model"
           class="selection:text-my-body-background w-full py-2.5 ps-4 text-ellipsis outline-none"
-          :class="errExist ? 'selection:bg-my-error selection:' : 'selection:bg-my-label'"
+          :class="
+            errExist
+              ? 'selection:bg-my-error placeholder:text-my-error/50'
+              : 'selection:bg-my-label placeholder:text-my-label/50'
+          "
           :placeholder
           @keydown.enter="invokeValidate"
         />
@@ -84,8 +118,7 @@ function invokeValidate() {
         />
       </div>
 
-      <div v-if="errExist" class="text-my-error text-xs">{{ errMessage }}</div>
-      <div v-else class="h-4"></div>
+      <div class="text-my-error h-4 text-xs">{{ errMessage }}</div>
     </div>
 
     <div class="flex flex-wrap gap-3">
@@ -94,4 +127,4 @@ function invokeValidate() {
     </div>
   </div>
 </template>
-<!-- #endregion example-1-use-validate-seq -->
+<!-- #endregion example-ru-1-use-validate-seq -->
