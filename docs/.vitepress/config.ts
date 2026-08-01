@@ -37,7 +37,7 @@ export default defineConfig({
             activeMatch: '^/(components|composables)/',
             items: [
               { text: 'Компоненты', link: '/components/' },
-              { text: 'Составные функции', link: '/composables/use-checkbox' },
+              { text: 'Составные функции', link: '/composables/use-validate-seq' },
             ],
           },
         ],
@@ -110,7 +110,7 @@ export default defineConfig({
             activeMatch: '^/en/(components|composables)/',
             items: [
               { text: 'Components', link: '/en/components/' },
-              { text: 'Composables', link: '/en/composables/use-checkbox' },
+              { text: 'Composables', link: '/en/composables/use-validate-seq' },
             ],
           },
         ],

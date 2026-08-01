@@ -12,7 +12,6 @@ export const sidebarConfigRussian: DefaultTheme.Sidebar = {
   ],
 
   '/composables': [
-    { text: 'useCheckbox', link: '/composables/use-checkbox' },
     { text: 'useValidate', link: '/composables/use-validate-seq' },
   ],
 }

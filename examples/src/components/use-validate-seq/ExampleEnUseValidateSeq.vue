@@ -1,4 +1,4 @@
-<!-- #region example-ru-1-use-validate-seq -->
+<!-- #region example-en-use-validate-seq -->
 <script setup lang="ts">
 import { ref } from 'vue'
 
@@ -25,16 +25,16 @@ interface ExampleUseValidateSeqProps extends ExampleState {
 
 const { timeout } = defineProps<ExampleUseValidateSeqProps>()
 
-/** Синхронное правило */
-const isRequiredSync = (value: string) => !!value || 'Поле обязательно для заполнения'
+/** Synchronous rule */
+const isRequiredSync = (value: string) => !!value || 'Field is required'
 
-/** Асинхронная правило */
+/** Asynchronous rule */
 const checkRemoteAsync = async (value: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-  return value !== 'admin' || 'Этот логин уже занят'
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+  return value !== 'admin' || 'This login is already taken'
 }
 
-/** Массив правил */
+/** Array of rules */
 const rules = [isRequiredSync, checkRemoteAsync]
 
 const disabled = ref(false)
@@ -122,9 +122,9 @@ function invokeValidate() {
     </div>
 
     <div class="flex flex-wrap gap-3">
-      <ExampleButton kind="success" label="Сбросить ошибку" @click="reset" />
-      <ExampleButton label="Проверить вручную" @click="invokeValidate" />
+      <ExampleButton kind="success" label="Reset error" @click="reset" />
+      <ExampleButton label="Validate manually" @click="invokeValidate" />
     </div>
   </div>
 </template>
-<!-- #endregion example-ru-1-use-validate-seq -->
+<!-- #endregion example-en-use-validate-seq -->

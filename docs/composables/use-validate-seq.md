@@ -4,8 +4,8 @@
 import { data } from '../composables.data.ts'
 import { ref } from 'vue'
 
-const error1 = ref(false)
-const inputModel = ref('admin')
+const exampleModel1 = ref('admin')
+const exampleModel2 = ref('admin')
 </script>
 
 <ComposableTable class="mt-3" :data="data.useValidateSeq"/>
@@ -17,18 +17,21 @@ const inputModel = ref('admin')
 <details>
 <summary class="select-none cursor-pointer">Код используемого компонента</summary>
 
-<<< @/../examples/src/components/use-validate-seq/ExampleRu1UseValidateSeq.vue#example-ru-1-use-validate-seq {47-55vue}
+<<< @/../examples/src/components/use-validate-seq/ExampleRuUseValidateSeq.vue#example-ru-use-validate-seq {47-55vue}
 
 </details>
 
-### Синхронная и асинхронная проверка поля через вызов функции validate
+### Синхронная и асинхронная валидация поля через вызов функции `validate`
 
-Данный пример использует массив правил `rules` имеющий одно синхронное правило проверяющее поле ввода на наличие непустого значения и одно асинхронное правило имитирующее запрос на сервер. Для примера асинхронное правило возвращает ошибку, в том случае если поле содержит значение `'admin'`. Массив правил может быть передан через параметр компонента, но для удобства отображения он объявлен непосредственно в блоке `<script>`.
+В данном примере массив правил `rules` содержит два правила:
 
-В примере ниже
+- синхронное — проверяет, что поле не пустое;
+- асинхронное — имитирует запрос к серверу длительностью `2` секунды.
 
-<ExampleContainer #default="{ modelValue, updateModelValue }" v-model="inputModel">
-<ExampleRu1UseValidateSeq
+Асинхронное правило возвращает ошибку, если значение поля равно `'admin'`.
+
+<ExampleContainer #default="{ modelValue, updateModelValue }" v-model="exampleModel1">
+<ExampleRuUseValidateSeq
 label="Логин"
 :model-value="modelValue"
 placeholder="Обязательное поле"
@@ -38,23 +41,23 @@ placeholder="Обязательное поле"
 
 ### Ограничение времени асинхронной проверки
 
-Следующий пример отличается от предыдущего установленным значением свойства `timeout` объекта `options`:
+В следующем примере в объект `options` передано свойство `timeout`:
 
 ```ts
 {
-    ms: 500,
-    message: 'Превышено время запроса к серверу валидации.'
+    ms: 1000,
+    message: 'Превышено время запроса к серверу валидации'
 }
 ```
 
-Данное значение ограничивает время асинхронной проверки до `0,5` секунды. А так как в нашем примере имитация работы асинхронного правила длится `1` секунду, мы получаем ошибку уже через `0,5` секунды не дожидаясь ответа асинхронного правила.
+Это значение ограничивает время асинхронной проверки `1` секундой и определяет возвращаемое сообщение. Поскольку имитация асинхронного правила длится `2` секунды, проверка прервётся через `1` секунду.
 
-<ExampleContainer #default="{ modelValue, updateModelValue }" v-model="inputModel">
-<ExampleRu1UseValidateSeq
+<ExampleContainer #default="{ modelValue, updateModelValue }" v-model="exampleModel2">
+<ExampleRuUseValidateSeq
 label="Логин"
 :model-value="modelValue"
 placeholder="Обязательное поле"
-:timeout="{ ms: 500, message: 'Превышено время запроса к серверу валидации.' }"
+:timeout="{ ms: 1000, message: 'Превышено время запроса к серверу валидации' }"
 @update:model-value="updateModelValue"
 />
 </ExampleContainer>

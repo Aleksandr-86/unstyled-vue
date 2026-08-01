@@ -40,7 +40,7 @@ export interface ComposableData {
   /** Описание составной функции */
   description: LocalizedString
   /** Имя составной функции */
-  name: 'useCheckbox'
+  name: string
   /** Параметры составной функции */
   parameters: ComposableParameter[]
   returns: ComposableReturnValue[]
