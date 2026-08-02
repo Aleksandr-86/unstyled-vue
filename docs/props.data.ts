@@ -92,8 +92,10 @@ function extractDescription(jsDoc: JSDoc | undefined): { ru: string; en: string 
     raw = comment
       .map((c) => {
         if (c !== undefined) {
-          c.getText()
+          return c.getText()
         }
+
+        return ''
       })
       .join('\n')
   }
@@ -155,7 +157,7 @@ export default {
     const project = new Project()
     const allProps: Record<string, PropItem[]> = {}
 
-    // КРИТИЧЕСКИ ВАЖНО ДЛЯ WINDOWS: заменяем обратные слэши на прямые для fast-glob
+    // критически важно для windows: замена обратных черт на прямые для fast-glob
     const vueGlob = path.resolve(__dirname, '../src/components/**/*.vue').replace(/\\/g, '/')
     const typesGlob = path.resolve(__dirname, '../src/types/**/*.ts').replace(/\\/g, '/')
     const componentsTsGlob = path.resolve(__dirname, '../src/components/**/*.ts').replace(/\\/g, '/')

@@ -5,7 +5,7 @@ export interface LocalizedString {
   ru: string
 }
 
-export interface PropItem {
+export interface PropertyData {
   /** Описание свойства */
   description: LocalizedString
   /** Свойство не является обязательным */
@@ -14,34 +14,32 @@ export interface PropItem {
   name: string
   /** Тип (объединение типов) свойства */
   type: string
+}
 
+export interface PropItem extends PropertyData {
   /** Значение по умолчанию */
   base?: string
 }
 
 export interface ComposableParameter {
   /** Описание параметра */
-  description: LocalizedString
+  description: string
   /** Имя параметра */
   name: string
   /** Тип параметра */
   type: string
 }
 
-export interface ComposableReturnValue {
-  description: LocalizedString
-  name: string
-  parameters: ComposableParameter[]
-  returnValue: string
-  type: 'function' | 'computed'
-}
-
 export interface ComposableData {
   /** Описание составной функции */
-  description: LocalizedString
+  description: string
   /** Имя составной функции */
   name: string
   /** Параметры составной функции */
   parameters: ComposableParameter[]
-  returns: ComposableReturnValue[]
+}
+
+export interface InterfaceItem {
+  interfaceName: string
+  properties: PropertyData[]
 }

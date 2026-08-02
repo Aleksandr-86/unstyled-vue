@@ -37,29 +37,21 @@ interface UseValidateReturn {
   uid: string
 
   /**
-   * Функция сброса результатов проверки.
+   * Функция сброса результатов проверки
    * (The function of resetting the test results)
    */
   reset(): void
   /**
-   * Асинхронная функция инициирующая валидацию полей. Успешная валидация возвращает true. Не успешная - объект типа ValidationError.
-   * (Asynchronous function that initiates field validation. Successful validation returns true. Failed - an object of the ValidationError type.)
+   * Асинхронная функция инициирующая валидацию полей. При успешной валидации возвращается true, при неуспешной — false.
+   * (Asynchronous function that initiates field validation. Returns true if validation succeeds, and false if it fails.)
    */
   validate(): Promise<boolean>
 }
 
 /**
- * @ru
- * Составная функция для последовательной валидации полей.
- *
- * @param model - Модель целевого компонента.
- * @param options - Параметры.
- *
- * @en
- * A composable function for sequential field validation.
- *
- * @param model - Target component model.
- * @param options - Parameters.
+ * Составная функция для последовательной валидации полей (A composable function for sequential field validation).
+ * @param model - Модель целевого компонента (Target component model).
+ * @param options - Параметры (Parameters).
  */
 export function useValidateSeq<T = unknown>(
   model: MaybeRefOrGetter<T>,

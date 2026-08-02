@@ -5,6 +5,7 @@ import { computed, Ref, ref } from 'vue'
 import BaseTable from '../../../../src/components/base-table/BaseTable.vue'
 import type { TableCol } from '../../../../src/components/base-table/index'
 import type { PropItem } from '../../../types'
+import { codeString } from './utils.ts'
 
 const { rows } = defineProps<{
   rows: PropItem[]
@@ -29,28 +30,6 @@ const COLS: TableCol<PropItem>[] = [
   { key: 'description', minWidth: '12.5rem' },
   { key: 'base', width: '12rem' },
 ]
-
-function codeString(str: string) {
-  const inner = str
-    .replace(/^\s*\{\s*/, '')
-    .replace(/\s*\}\s*$/, '')
-    .trim()
-
-  if (!inner) return '{}'
-
-  const tokens = inner.split(/\s+/).filter(Boolean)
-  const lines: string[] = []
-
-  for (let i = 0; i < tokens.length; i += 2) {
-    const name = tokens[i]
-    const type = tokens[i + 1]
-    if (name && type) {
-      lines.push(`  ${name} ${type}`)
-    }
-  }
-
-  return '{\n' + lines.join('\n') + '\n}'
-}
 </script>
 
 <template>
@@ -73,7 +52,7 @@ function codeString(str: string) {
         <div>
           <div>{{ row.description[lang] }}</div>
           <div v-if="row.type.startsWith('{')" class="text-code">
-            <pre class="language-ts">{{ codeString(row.type) }}</pre>
+            <pre class="my-font">{{ codeString(row.type) }}</pre>
           </div>
           <div v-else class="text-code">{{ row.type }}</div>
         </div>

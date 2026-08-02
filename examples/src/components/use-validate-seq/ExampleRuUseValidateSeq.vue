@@ -6,7 +6,7 @@ import type { ExampleState } from '../../../../docs/.vitepress/theme/components/
 import BaseInput from '../../../../src/components/base-input/BaseInput.vue'
 import { useValidateSeq } from '../../../../src/composables/useValidateSeq'
 import type { BaseInputModel } from '../../../../src/index'
-import type { ValidationError } from '../../../../src/types/common-types.ts'
+import type { Rule, ValidationError } from '../../../../src/types/common-types'
 import BaseClear from '../base/BaseClear.vue'
 import BaseLoader from '../base/BaseLoader.vue'
 import ExampleButton from '../ExampleButton.vue'
@@ -28,8 +28,8 @@ const { timeout } = defineProps<ExampleUseValidateSeqProps>()
 /** Синхронное правило */
 const isRequiredSync = (value: string) => !!value || 'Поле обязательно для заполнения'
 
-/** Асинхронная правило */
-const checkRemoteAsync = async (value: string) => {
+/** Асинхронное правило */
+const checkRemoteAsync: Rule<string> = async (value: string) => {
   await new Promise((resolve) => setTimeout(resolve, 2000))
   return value !== 'admin' || 'Этот логин уже занят'
 }
