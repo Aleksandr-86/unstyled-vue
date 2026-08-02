@@ -11,10 +11,14 @@ import ExampleContainer from './components/ExampleContainer.vue'
 import PropsTable from './components/PropsTable.vue'
 import ComposableTable from './components/ComposableTable.vue'
 
+import ExampleButton from '../../../examples/src/components/ExampleButton.vue'
+
 import BaseCheckbox from '../../../src/components/base-checkbox/BaseCheckbox.vue'
 import ExampleCheckbox from '../../../examples/src/components/ExampleCheckbox.vue'
 import BaseInput from '../../../src/components/base-input/BaseInput.vue'
 import ExampleInput from '../../../examples/src/components/ExampleInput.vue'
+import ExampleRuUseValidateSeq from '../../../examples/src/components/use-validate-seq/ExampleRuUseValidateSeq.vue'
+import ExampleEnUseValidateSeq from '../../../examples/src/components/use-validate-seq/ExampleEnUseValidateSeq.vue'
 import BaseTable from '../../../src/components/base-table/BaseTable.vue'
 import ExampleTable from '../../../examples/src/components/ExampleTable.vue'
 import BaseTextarea from '../../../src/components/base-textarea/BaseTextarea.vue'
@@ -29,10 +33,14 @@ export default {
     app.component('ComposableTable', ComposableTable)
     app.component('ExampleContainer', ExampleContainer)
 
+    app.component('ExampleButton', ExampleButton)
+
     app.component('BaseCheckbox', BaseCheckbox)
     app.component('ExampleCheckbox', ExampleCheckbox)
     app.component('BaseInput', BaseInput)
     app.component('ExampleInput', ExampleInput)
+    app.component('ExampleRuUseValidateSeq', ExampleRuUseValidateSeq)
+    app.component('ExampleEnUseValidateSeq', ExampleEnUseValidateSeq)
     app.component('BaseTable', BaseTable)
     app.component('ExampleTable', ExampleTable)
     app.component('BaseTextarea', BaseTextarea)

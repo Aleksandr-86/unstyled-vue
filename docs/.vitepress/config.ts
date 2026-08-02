@@ -14,7 +14,7 @@ export default defineConfig({
       'link',
       {
         rel: 'icon',
-        href: '/unstyled-vue//favicon.ico',
+        href: '/unstyled-vue/favicon.ico',
       },
     ],
   ],
@@ -37,7 +37,7 @@ export default defineConfig({
             activeMatch: '^/(components|composables)/',
             items: [
               { text: 'Компоненты', link: '/components/' },
-              { text: 'Составные функции', link: '/composables/' },
+              { text: 'Составные функции', link: '/composables/use-validate-seq' },
             ],
           },
         ],
@@ -110,7 +110,7 @@ export default defineConfig({
             activeMatch: '^/en/(components|composables)/',
             items: [
               { text: 'Components', link: '/en/components/' },
-              { text: 'Composables', link: '/en/composables/' },
+              { text: 'Composables', link: '/en/composables/use-validate-seq' },
             ],
           },
         ],

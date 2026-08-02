@@ -8,18 +8,18 @@ export type BaseInputModel = string | number | null
 
 export interface BaseInputProps extends BaseFieldProps {
   /**
-   * @ru Максимальное значение
-   * @en Max value
+   * Максимальное значение
+   * Max value
    */
   max?: number
   /**
-   * @ru Минимальное значение
-   * @en Min value
+   * Минимальное значение
+   * Min value
    */
   min?: number
   /**
-   * @ru Тип
-   * @en Type
+   * Тип
+   * Type
    */
   type?: string
 }

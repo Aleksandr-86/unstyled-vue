@@ -5,17 +5,17 @@ hero:
   name: |
     A library of base
     Vue components
-    (work in progress)
   tagline: |
     and composables without built-in styles,
     for your design system.
+    (work in progress)
   actions:
     - theme: brand
       text: Components
       link: /en/components/
     - theme: brand
       text: Composables
-      link: /en/composables/
+      link: /en/composables/use-validate-seq
 
 features:
   - title: TypeScript

@@ -11,5 +11,7 @@ export const sidebarConfigEnglish: DefaultTheme.Sidebar = {
     // { text: 'SegmentedControl', link: '/en/components/segmented-control' },
   ],
 
-  '/en/composables': [{ text: 'Composables', link: '/en/composables/' }],
+  '/en/composables': [
+    { text: 'useValidate', link: '/en/composables/use-validate-seq' },
+  ],
 }

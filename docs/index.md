@@ -3,12 +3,11 @@
 layout: home
 
 hero:
-  name: |
-    Библиотека базовых Vue-компонентов
-    (в разработке)
+  name: Библиотека базовых Vue-компонентов
   tagline: |
     и составных функций без встроенных стилей
     под вашу дизайн-систему.
+    (в разработке)
 
   text:
   actions:
@@ -17,7 +16,7 @@ hero:
       link: /components/
     - theme: brand
       text: Составные функции
-      link: /composables/
+      link: /composables/use-validate-seq
 
 features:
   - title: TypeScript
