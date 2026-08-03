@@ -2,10 +2,11 @@ import { parse } from '@vue/compiler-sfc'
 import fg from 'fast-glob'
 import fs from 'fs'
 import path from 'path'
-import { type InterfaceDeclaration, JSDoc, Project, PropertySignature, SyntaxKind } from 'ts-morph'
+import { type InterfaceDeclaration, Project, PropertySignature, SyntaxKind } from 'ts-morph'
 import { fileURLToPath } from 'url'
 
 import type { PropItem } from './types'
+import { extractDescription } from './utils'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -66,62 +67,6 @@ function getDefaultValues(content: string, project: Project): Record<string, str
 
   project.removeSourceFile(tempFile)
   return defaults
-}
-
-/** Извлекает русское и английское описание из JSDoc. */
-function extractDescription(jsDoc: JSDoc | undefined): { ru: string; en: string } {
-  if (!jsDoc) return { ru: '', en: '' }
-
-  // Обратная совместимость: старые теги @ru / @en
-  const ruTag = jsDoc.getTags().find((t) => t.getTagName() === 'ru')
-  const enTag = jsDoc.getTags().find((t) => t.getTagName() === 'en')
-
-  if (ruTag || enTag) {
-    return {
-      ru: ruTag?.getCommentText() || '',
-      en: enTag?.getCommentText() || '',
-    }
-  }
-
-  const comment = jsDoc.getComment()
-  let raw = ''
-
-  if (typeof comment === 'string') {
-    raw = comment
-  } else if (Array.isArray(comment)) {
-    raw = comment
-      .map((c) => {
-        if (c !== undefined) {
-          return c.getText()
-        }
-
-        return ''
-      })
-      .join('\n')
-  }
-
-  if (!raw) {
-    raw = jsDoc.getDescription()
-  }
-
-  const lines = raw
-    .split('\n')
-    .map((line) => line.replace(/^\s*\*\s?/, '').trim())
-    .filter((line) => line.length > 0)
-
-  const hasCyrillic = (s: string) => /[а-яёА-ЯЁ]/.test(s)
-  const ruLines: string[] = []
-  const enLines: string[] = []
-
-  for (const line of lines) {
-    if (hasCyrillic(line)) ruLines.push(line)
-    else enLines.push(line)
-  }
-
-  return {
-    ru: ruLines.join(' '),
-    en: enLines.join(' '),
-  }
 }
 
 /**

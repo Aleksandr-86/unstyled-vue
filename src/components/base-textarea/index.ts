@@ -8,13 +8,13 @@ export type BaseTextareaModel = string | number | null
 
 export interface BaseTextareaProps extends BaseFieldProps {
   /**
-   * @ru Автоматическое исправление орфографических ошибок
-   * @en Automatic correction of spelling errors
+   * Автоматическое исправление орфографических ошибок
+   * (Automatic correction of spelling errors)
    */
   autocorrect?: 'on' | 'off'
   /**
-   * @ru Количество видимых строк области текста
-   * @en The number of visible text lines for the textarea
+   * Количество видимых строк области текста
+   * (The number of visible text lines for the textarea)
    */
   rows?: number
 }

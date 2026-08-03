@@ -30,6 +30,18 @@ const COLS: TableCol<PropItem>[] = [
   { key: 'description', minWidth: '12.5rem' },
   { key: 'base', width: '12rem' },
 ]
+
+function transformDescription(description: LocalizedString) {
+  if (!description) {
+    return description
+  }
+
+  if (lang.value === 'en') {
+    return description.en.replace(/^\(|\)$/g, '')
+  }
+
+  return description.ru
+}
 </script>
 
 <template>
@@ -50,7 +62,7 @@ const COLS: TableCol<PropItem>[] = [
 
       <template #description="{ row }">
         <div>
-          <div>{{ row.description[lang] }}</div>
+          <div>{{ transformDescription(row.description) }}</div>
           <div v-if="row.type.startsWith('{')" class="text-code">
             <pre class="my-font">{{ codeString(row.type) }}</pre>
           </div>

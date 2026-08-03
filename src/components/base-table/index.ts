@@ -18,14 +18,14 @@ export type HeaderCell = {
 
 export interface BaseTableProps<T> {
   /**
-   * @ru Конфигурация колонок таблицы
-   * @en Table column configuration
+   * Конфигурация колонок таблицы
+   * (Table column configuration)
    */
   cols: TableCol<T>[]
 
   /**
-   * @ru Классы компонента
-   * @en Component classes
+   * Классы компонента
+   * (Component classes)
    */
   classes?: {
     root?: string
@@ -39,13 +39,13 @@ export interface BaseTableProps<T> {
     emptyCell?: string
   }
   /**
-   * @ru Конфигурация шапки таблицы
-   * @en Table header configuration
+   * Конфигурация шапки таблицы
+   * (Table header configuration)
    */
   headers?: string | HeaderCell | (string | HeaderCell)[]
   /**
-   * @ru Массив данных для отображения в строках таблицы
-   * @en Array of data objects to display in the table rows
+   * Массив данных для отображения в строках таблицы
+   * (Array of data objects to display in the table rows)
    */
   rows?: T[]
 }
