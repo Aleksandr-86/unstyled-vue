@@ -40,12 +40,12 @@ interface UseValidateReturn {
    * Функция сброса результатов проверки
    * (The function of resetting the test results)
    */
-  reset(): void
+  reset: () => void
   /**
    * Асинхронная функция инициирующая валидацию полей. При успешной валидации возвращается true, при неуспешной — false.
    * (Asynchronous function that initiates field validation. Returns true if validation succeeds, and false if it fails.)
    */
-  validate(): Promise<boolean>
+  validate: () => Promise<boolean>
 }
 
 /**

@@ -7,8 +7,8 @@ export interface ValidationError {
    */
   errorMessage: string
   /**
-   * Уникальный идентификатор компонента
-   * (Unique component identifier)
+   * Уникальный идентификатор
+   * (Unique identifier)
    */
   uid: string
 }

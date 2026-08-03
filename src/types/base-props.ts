@@ -1,47 +1,47 @@
 export interface BaseFieldProps {
   /**
-   * @ru Автозаполнение
-   * @en Autocomplete
+   * Автозаполнение
+   * (Autocomplete)
    */
   autocomplete?: string
   /**
-   * @ru Состояние "отключено"
-   * @en Disabled state
+   * Состояние "отключено"
+   * (Disabled state)
    */
   disabled?: boolean
   /**
-   * @ru Идентификатор
-   * @en Identifier
+   * Идентификатор
+   * (Identifier)
    */
   id?: string
   /**
-   * @ru Максимальная длина строки
-   * @en Maximum string length
+   * Максимальная длина строки
+   * (Maximum string length)
    */
   maxlength?: number
   /**
-   * @ru Минимальная длина строки
-   * @en Minimum string length
+   * Минимальная длина строки
+   * (Minimum string length)
    */
   minlength?: number
   /**
-   * @ru Имя
-   * @en Name
+   * Имя
+   * (Name)
    */
   name?: string
   /**
-   * @ru Строка отображаемая в случае отсутствия какого-либо значения
-   * @en Text displayed when there is no value
+   * Строка отображаемая в случае отсутствия какого-либо значения
+   * (Text displayed when there is no value)
    */
   placeholder?: string
   /**
-   * @ru Состояние "только для чтения"
-   * @en Read-only state
+   * Состояние "только для чтения"
+   * (Read-only state)
    */
   readonly?: boolean
   /**
-   * @ru Обязательное поле
-   * @en Required field
+   * Обязательное поле
+   * (Required field)
    */
   required?: boolean
 }
