@@ -18,23 +18,17 @@ const { disabled, error, readonly, required } = defineProps<ExampleCheckboxProps
 //  #region example-checkbox-states-classes
 const statesClasses = computed(() => {
   let input =
-    'peer border-my-input-border bg-my-input-bg h-3 w-3 cursor-pointer appearance-none rounded-[3px] border bg-clip-content p-px'
+    'peer h-3 w-3 cursor-pointer appearance-none rounded-[3px] border border-solid bg-clip-content p-px border-my-input-border bg-my-input-bg '
 
   if (disabled) {
     input += ' checked:bg-my-label/70 checked:border-my-label/70 cursor-not-allowed'
   } else if (error) {
     input += ' checked:border-my-error group-hover:border-my-error checked:bg-my-error'
   } else if (readonly) {
-    input += ' checked:border-my-label/70 checked:bg-my-label/70 cursor-not-allowed'
+    input += ' checked:border-my-label/70 checked:bg-my-label/70 cursor-not-allowed border-dashed'
   } else {
     input +=
       ' checked:border-my-label checked:bg-my-label group-hover:border-my-label group-hover:required:not-checked:border-my-required'
-  }
-
-  if (readonly) {
-    input += ' border-dashed'
-  } else {
-    input += ' border-solid'
   }
 
   let label = ''
@@ -63,6 +57,8 @@ const statesClasses = computed(() => {
 </script>
 
 <template>
+  <div class="checked:bg-my-label/70 checked:border-my-label/70 cursor-not-allowed"></div>
+
   <!-- #region example-checkbox-advanced-template -->
   <BaseCheckbox
     v-if="kind === 'advanced'"

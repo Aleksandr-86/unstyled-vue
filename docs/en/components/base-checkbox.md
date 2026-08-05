@@ -70,7 +70,7 @@ In this example, the custom class `accent-my-label` (previously used to tint the
   </template>
 </ExampleContainer>
 
-<<< @/../examples/src/components/ExampleCheckbox.vue#example-checkbox-states-template {6-10html}
+<<< @/../examples/src/components/ExampleCheckbox.vue#example-checkbox-states-tailwind-template {6-10html}
 
 ### Checkbox with an Icon
 

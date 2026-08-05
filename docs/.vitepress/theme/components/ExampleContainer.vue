@@ -46,7 +46,7 @@ const showControl = computed(() => disabled || error || readonly || required)
         <BaseCheckbox
           v-if="props[key as keyof typeof props]"
           :classes
-          :label="key"
+          :label="key === 'readonly' ? 'read-only' : key"
           :model-value="state[key as keyof ExampleState]"
           @update:model-value="onUpdate(key as keyof ExampleState)"
         />
@@ -82,12 +82,6 @@ const showControl = computed(() => disabled || error || readonly || required)
             <span class="text-text-1">_model_: _</span>{{ model }}<span class="text-text-1">_</span>
           </div>
           <div><span class="text-text-1">typeof model: </span>{{ typeof model }}</div>
-          <!-- <div>
-            model === null: <span class="text-my-label">{{ model === null }}</span>
-          </div>
-          <div>
-            model === '': <span class="text-my-label">{{ model === null }}</span>
-          </div> -->
         </div>
 
         <div class="at630:w-2/3 flex items-center-safe justify-center">
