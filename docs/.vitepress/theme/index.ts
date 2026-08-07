@@ -15,6 +15,8 @@ import ExampleButton from '../../../examples/src/components/ExampleButton.vue'
 
 import BaseCheckbox from '../../../src/components/base-checkbox/BaseCheckbox.vue'
 import ExampleCheckbox from '../../../examples/src/components/ExampleCheckbox.vue'
+import ExampleRuUseForm from '../../../examples/src/components/use-form/ExampleRuUseForm.vue'
+import ExampleValidatedInput from '../../../examples/src/components/use-form/ExampleValidatedInput.vue'
 import BaseInput from '../../../src/components/base-input/BaseInput.vue'
 import ExampleInput from '../../../examples/src/components/ExampleInput.vue'
 import ExampleRuUseValidateSeq from '../../../examples/src/components/use-validate-seq/ExampleRuUseValidateSeq.vue'
@@ -37,6 +39,8 @@ export default {
 
     app.component('BaseCheckbox', BaseCheckbox)
     app.component('ExampleCheckbox', ExampleCheckbox)
+    app.component('ExampleRuUseForm', ExampleRuUseForm)
+    app.component('ExampleValidatedInput', ExampleValidatedInput)
     app.component('BaseInput', BaseInput)
     app.component('ExampleInput', ExampleInput)
     app.component('ExampleRuUseValidateSeq', ExampleRuUseValidateSeq)

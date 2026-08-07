@@ -7,6 +7,7 @@ import BaseInput from '../../../../src/components/base-input/BaseInput.vue'
 import { useValidateSeq } from '../../../../src/composables/useValidateSeq'
 import type { BaseInputModel } from '../../../../src/index'
 import type { ValidationError } from '../../../../src/types/common-types.ts'
+import { delay } from '../../utils/delay.ts'
 import BaseClear from '../base/BaseClear.vue'
 import BaseLoader from '../base/BaseLoader.vue'
 import ExampleButton from '../ExampleButton.vue'
@@ -30,7 +31,7 @@ const isRequiredSync = (value: string) => !!value || 'Field is required'
 
 /** Asynchronous rule */
 const checkRemoteAsync = async (value: string) => {
-  await new Promise((resolve) => setTimeout(resolve, 2000))
+  await delay(2000)
   return value !== 'admin' || 'This login is already taken'
 }
 
@@ -45,7 +46,7 @@ function onValidationError(evt: ValidationError) {
   console.log('onValidationError', evt)
 }
 
-const { errExist, errMessage, isValidating, reset, uid, validate } = useValidateSeq(model, {
+const { errorExist, errorMsg, isValidating, resetError, uid, validate } = useValidateSeq(model, {
   rules,
   timeout,
   error,
@@ -96,33 +97,33 @@ function invokeValidate() {
 
       <div
         class="bg-my-body-background flex items-center gap-x-2 rounded-lg pe-3 transition-all duration-150 outline-none"
-        :class="errExist ? 'text-my-error ring' : 'text-my-label focus-within:ring hover:ring'"
+        :class="errorExist ? 'text-my-error ring' : 'text-my-label focus-within:ring hover:ring'"
       >
         <BaseInput
           :id="uid"
           v-model="model"
           class="selection:text-my-body-background w-full py-2.5 ps-4 text-ellipsis outline-none"
           :class="
-            errExist
+            errorExist
               ? 'selection:bg-my-error placeholder:text-my-error/50'
               : 'selection:bg-my-label placeholder:text-my-label/50'
           "
           :placeholder
           @keydown.enter="invokeValidate"
         />
-        <BaseLoader v-if="isValidating" :class="errExist ? 'text-my-error' : 'text-my-label'" />
+        <BaseLoader v-if="isValidating" :class="errorExist ? 'text-my-error' : 'text-my-label'" />
         <BaseClear
           v-if="model && model !== ''"
-          :class="errExist ? 'fill-my-error' : 'fill-my-label'"
+          :class="errorExist ? 'fill-my-error' : 'fill-my-label'"
           @click="model = ''"
         />
       </div>
 
-      <div class="text-my-error h-4 text-xs">{{ errMessage }}</div>
+      <div class="text-my-error h-4 text-xs">{{ errorMsg }}</div>
     </div>
 
     <div class="flex flex-wrap gap-3">
-      <ExampleButton kind="success" label="Reset error" @click="reset" />
+      <ExampleButton color="green" label="Reset error" @click="resetError" />
       <ExampleButton label="Validate manually" @click="invokeValidate" />
     </div>
   </div>

@@ -19,12 +19,12 @@ interface UseValidateReturn {
    * Вычисляемое свойство отражающее факт наличия ошибки
    * (A computed property that reflects the presence of an error)
    */
-  errExist: ComputedRef<boolean>
+  errorExist: ComputedRef<boolean>
   /**
    * Вычисляемое свойство отображающее сообщение об ошибке
    * (A computed property that displays an error message)
    */
-  errMessage: ComputedRef<string | undefined>
+  errorMsg: ComputedRef<string | undefined>
   /**
    * Реактивная переменная для отслеживания процесса валидации
    * (Reactive variable for tracking the validation process)
@@ -40,7 +40,7 @@ interface UseValidateReturn {
    * Функция сброса результатов проверки
    * (The function of resetting the test results)
    */
-  reset: () => void
+  resetError: () => void
   /**
    * Асинхронная функция инициирующая валидацию полей. При успешной валидации возвращается true, при неуспешной — false.
    * (Asynchronous function that initiates field validation. Returns true if validation succeeds, and false if it fails.)
@@ -63,19 +63,19 @@ export function useValidateSeq<T = unknown>(
 
   const isValidating = ref(false)
 
-  const internalErrExist = ref(false)
-  const internalErrMessage = ref('')
+  const internalErrorExist = ref(false)
+  const internalErrorMsg = ref('')
 
-  const errExist = computed(() => {
+  const errorExist = computed(() => {
     if (toValue(options.disabled)) {
       return false
     }
 
     const externalError = toValue(options.error)
-    return externalError || internalErrExist.value
+    return externalError || internalErrorExist.value
   })
 
-  const errMessage = computed(() => {
+  const errorMsg = computed(() => {
     if (toValue(options.disabled)) {
       return ''
     }
@@ -87,14 +87,14 @@ export function useValidateSeq<T = unknown>(
       return externalMessage || ''
     }
 
-    return internalErrMessage.value
+    return internalErrorMsg.value
   })
 
   watch(
     () => options.disabled,
     () => {
       if (toValue(options.disabled)) {
-        reset()
+        resetError()
       }
     },
   )
@@ -102,99 +102,121 @@ export function useValidateSeq<T = unknown>(
   function invokeValidationError(message: string | undefined) {
     if (toValue(options.disabled)) return
 
-    internalErrExist.value = true
-    internalErrMessage.value = message || ''
+    internalErrorExist.value = true
+    internalErrorMsg.value = message || ''
 
     if (options.onValidationError) {
       options.onValidationError({ uid, errorMessage: message || '' })
     }
   }
 
+  let currentValidationPromise: Promise<boolean> | null = null
+
   async function validate(): Promise<boolean> {
     if (toValue(options.disabled)) {
       return true
     }
 
-    isValidating.value = true
-    let timeoutId: ReturnType<typeof setTimeout> | undefined
+    // Защита от повторной проверки
+    if (currentValidationPromise) {
+      return currentValidationPromise
+    }
 
-    try {
-      const externalError = toValue(options.error)
+    currentValidationPromise = (async (): Promise<boolean> => {
+      isValidating.value = true
+      let timeoutId: ReturnType<typeof setTimeout> | undefined
 
-      if (externalError === true) {
-        const externalMessage = toValue(options.errorMessage)
-        invokeValidationError(externalMessage)
-        return false
-      }
+      try {
+        const externalError = toValue(options.error)
 
-      const currentRules = toValue(options.rules) || []
+        if (externalError === true) {
+          const externalMessage = toValue(options.errorMessage)
+          invokeValidationError(externalMessage)
+          return false
+        }
 
-      for (const rule of currentRules) {
-        try {
-          const rulePromise = Promise.resolve(rule(toValue(model)))
-          let result: string | boolean | void
+        const currentRules = toValue(options.rules) || []
 
-          if (typeof timeoutMs === 'number' && timeoutMs > 0) {
-            const timeoutPromise = new Promise<string | boolean | void>((_, reject) => {
-              timeoutId = setTimeout(() => reject(new Error('[Unstyled-vue]: Timeout.')), timeoutMs)
-            })
+        for (const rule of currentRules) {
+          try {
+            const rulePromise = Promise.resolve(rule(toValue(model)))
+            let result: string | boolean | void
 
-            result = await Promise.race([rulePromise, timeoutPromise])
+            if (typeof timeoutMs === 'number' && timeoutMs > 0) {
+              const timeoutPromise = new Promise<string | boolean | void>((_, reject) => {
+                timeoutId = setTimeout(() => reject(new Error('[Unstyled-vue]: Timeout.')), timeoutMs)
+              })
 
+              result = await Promise.race([rulePromise, timeoutPromise])
+
+              if (timeoutId) {
+                clearTimeout(timeoutId)
+              }
+            } else {
+              result = await rulePromise
+            }
+
+            // Проверка на случай если во время асинхронного шага поле было отключено от проверки
+            if (toValue(options.disabled)) {
+              return true
+            }
+
+            if (result === false || typeof result === 'string') {
+              invokeValidationError(result === false ? '' : result)
+              return false
+            }
+          } catch (error: unknown) {
             if (timeoutId) {
               clearTimeout(timeoutId)
             }
-          } else {
-            result = await rulePromise
-          }
 
-          if (toValue(options.disabled)) {
-            return true
-          }
+            if (toValue(options.disabled)) {
+              return true
+            }
 
-          if (result === false || typeof result === 'string') {
-            invokeValidationError(result === false ? '' : result)
+            if (error instanceof Error) {
+              invokeValidationError(
+                error.message === '[Unstyled-vue]: Timeout.'
+                  ? options.timeout?.message
+                  : '[Unstyled-vue]: An error occurred during validation.',
+              )
+            } else {
+              invokeValidationError('[Unstyled-vue]: Unknown error during validation.')
+            }
+
             return false
           }
-        } catch (error: unknown) {
-          if (timeoutId) {
-            clearTimeout(timeoutId)
-          }
-
-          if (toValue(options.disabled)) {
-            return true
-          }
-
-          if (error instanceof Error) {
-            invokeValidationError(
-              error.message === '[Unstyled-vue]: Timeout.'
-                ? options.timeout?.message
-                : '[Unstyled-vue]: An error occurred during validation.',
-            )
-          } else {
-            invokeValidationError('[Unstyled-vue]: Unknown error during validation.')
-          }
-
-          return false
         }
-      }
 
-      internalErrExist.value = false
-      internalErrMessage.value = ''
-      return true
-    } finally {
-      isValidating.value = false
-    }
+        internalErrorExist.value = false
+        internalErrorMsg.value = ''
+        return true
+      } finally {
+        isValidating.value = false
+        currentValidationPromise = null
+      }
+    })()
+
+    return currentValidationPromise
   }
 
   if (options.immediate) {
     validate()
   }
 
-  function reset() {
-    internalErrExist.value = false
-    internalErrMessage.value = ''
+  function resetError() {
+    internalErrorExist.value = false
+    internalErrorMsg.value = ''
     isValidating.value = false
+    currentValidationPromise = null
+  }
+
+  function clearField() {
+    resetError()
+
+    if (options.onResetValue) {
+      options.onResetValue()
+    }
   }
 
   if (formContext) {
@@ -206,16 +228,16 @@ export function useValidateSeq<T = unknown>(
       }
     }
 
-    formContext.registerFormField(uid, validate, reset, isValidating, focus)
+    formContext.registerFormField(uid, isValidating, clearField, focus, resetError, validate)
     onUnmounted(() => formContext.unregisterFormField(uid))
   }
 
   return {
-    uid,
-    errExist,
-    errMessage,
+    errorExist,
+    errorMsg,
     isValidating,
+    uid,
+    resetError,
     validate,
-    reset,
   }
 }

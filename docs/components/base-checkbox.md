@@ -72,7 +72,7 @@ import { data } from '../props.data.ts'
 
 <<< @/../examples/src/components/ExampleCheckbox.vue#example-checkbox-states-tailwind-template {6-10html}
 
-В примере выше стилизация выполняется следующим образом: в элемент передаются соответствующие атрибуты (`disabled`, `aria-invalid`, `readonly`, `required`), а классы `Tailwind` с модификаторами состояний реагируют на эти атрибуты и применяют нужные стили. <br />
+В примере выше стилизация выполняется следующим образом: в элемент `<input>` передаются соответствующие атрибуты (`disabled`, `aria-invalid`, `readonly`, `required`), а классы `Tailwind` с модификаторами состояний реагируют на эти атрибуты и применяют нужные стили. <br />
 Также возможно использование модификаторов состояний и динамических классов `Vue` с акцентом на динамические классы. Пример:
 
 <ExampleContainer disabled error readonly required>

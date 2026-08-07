@@ -31,10 +31,6 @@ export interface ComposableParameter {
 }
 
 export interface ComposableData {
-  /** Описание составной функции */
-  description: string
-  /** Имя составной функции */
-  name: string
   /** Параметры составной функции */
   parameters: ComposableParameter[]
 }
