@@ -35,6 +35,10 @@ export function useForm(): UseFormReturn {
   const formFields = ref<Record<string, RegisteredField>>({})
   const isSubmitting = ref(false)
 
+  // const isFormValidating = computed(() => {
+  //   return Object.values(formFields.value).some((field) => field.isValidating.value)
+  // })
+
   function registerFormField(
     uid: string,
     isValidating: Ref<boolean>,
@@ -82,15 +86,12 @@ export function useForm(): UseFormReturn {
           elements.sort((a, b) => {
             // Безопасная проверка позиции
             const position = a.compareDocumentPosition(b)
-
             if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1
             if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1
-
             return 0
           })
 
           const firstFailedElement = elements[0]
-
           if (firstFailedElement) {
             formFields.value[firstFailedElement.id]?.focus()
           }

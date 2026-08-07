@@ -18,7 +18,7 @@ interface ExampleInput extends ExampleState {
 
 const { rules } = defineProps<ExampleInput>()
 
-const { errorExist, errorMsg, isValidating, uid } = useValidateSeq(model, {
+const { errorExist, errorMsg, isValidating, uid, validate } = useValidateSeq(model, {
   rules,
   onResetValue: () => (model.value = ''),
 })
@@ -42,6 +42,7 @@ const { errorExist, errorMsg, isValidating, uid } = useValidateSeq(model, {
             : 'selection:bg-my-label placeholder:text-my-label/50'
         "
         :placeholder
+        @blur="validate"
       />
       <BaseLoader v-if="isValidating" :class="errorExist ? 'text-my-error' : 'text-my-label'" />
       <BaseClear
