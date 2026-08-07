@@ -62,7 +62,7 @@ export function useForm(): UseFormReturn {
 
   async function validateForm(): Promise<boolean> {
     // Защита от повторной валидации формы
-    if (isSubmitting.value) return false
+    // if (isSubmitting.value) return false
 
     isSubmitting.value = true
 

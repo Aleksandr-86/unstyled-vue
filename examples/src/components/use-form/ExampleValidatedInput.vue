@@ -30,7 +30,7 @@ const { errorExist, errorMsg, isValidating, uid, validate } = useValidateSeq(mod
 
     <div
       class="bg-my-body-background relative flex items-center gap-x-2 rounded-lg pe-3 transition-all duration-150 outline-none"
-      :class="errorExist ? 'text-my-error ring' : 'text-my-label focus-within:ring hover:ring'"
+      :class="errorExist || isValidating ? 'text-my-error ring' : 'text-my-label focus-within:ring hover:ring'"
     >
       <BaseInput
         :id="uid"
@@ -50,10 +50,9 @@ const { errorExist, errorMsg, isValidating, uid, validate } = useValidateSeq(mod
         :class="errorExist ? 'fill-my-error' : 'fill-my-label'"
         @click="model = ''"
       />
+
+      <div v-if="isValidating" class="absolute inset-0 cursor-not-allowed bg-transparent"></div>
     </div>
-
     <div class="text-my-error h-4 text-xs">{{ errorMsg }}</div>
-
-    <div v-if="isValidating" class="absolute inset-0 cursor-not-allowed bg-transparent"></div>
   </div>
 </template>

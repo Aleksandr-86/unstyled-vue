@@ -47,7 +47,7 @@ const hasMinLength: Rule<string> = (value) => value.length >= 4 || 'Требуе
 
 /** Асинхронное правило */
 const checkRemoteAsync: Rule<string> = async (value: string) => {
-  await delay(2000)
+  await delay(5000)
   return value !== 'admin' || 'Этот логин уже занят'
 }
 </script>
@@ -75,14 +75,7 @@ const checkRemoteAsync: Rule<string> = async (value: string) => {
     <div class="flex flex-wrap gap-4">
       <ExampleButton class="w-32" color="green" label="Сбросить ошибки" @click="onResetErrors" />
       <ExampleButton class="w-32" color="green" label="Сбросить форму" @click="onResetForm" />
-      <ExampleButton
-        class="w-32"
-        :disabled="isSubmitting"
-        form="auth-form"
-        :label="isSubmitting ? 'Проверка...' : 'Отправить'"
-        :loading="isSubmitting"
-        type="submit"
-      />
+      <ExampleButton class="w-32" form="auth-form" :label="isSubmitting ? 'Проверка...' : 'Отправить'" type="submit" />
     </div>
   </div>
 </template>
