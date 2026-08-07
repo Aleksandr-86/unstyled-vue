@@ -26,11 +26,16 @@ const { errorExist, errorMsg, isValidating, uid, validate } = useValidateSeq(mod
 
 <template>
   <div class="flex w-full flex-col gap-y-1">
+    <div>errorExist {{ errorExist }}</div>
     <label class="text-xs" :for="uid">{{ label }}</label>
 
     <div
       class="bg-my-body-background relative flex items-center gap-x-2 rounded-lg pe-3 transition-all duration-150 outline-none"
-      :class="errorExist || isValidating ? 'text-my-error ring' : 'text-my-label focus-within:ring hover:ring'"
+      :class="{
+        'text-my-error ring': errorExist,
+        'text-my-label': !errorExist,
+        'focus-within:ring hover:ring': !isValidating,
+      }"
     >
       <BaseInput
         :id="uid"
@@ -42,7 +47,7 @@ const { errorExist, errorMsg, isValidating, uid, validate } = useValidateSeq(mod
             : 'selection:bg-my-label placeholder:text-my-label/50'
         "
         :placeholder
-        @blur="validate"
+        @blur="validate()"
       />
       <BaseLoader v-if="isValidating" :class="errorExist ? 'text-my-error' : 'text-my-label'" />
       <BaseClear

@@ -66,6 +66,8 @@ export function useValidateSeq<T = unknown>(
   const internalErrorExist = ref(false)
   const internalErrorMsg = ref('')
 
+  let pendingValidation: Promise<boolean> | null = null
+
   const errorExist = computed(() => {
     if (toValue(options.disabled)) {
       return false
@@ -111,79 +113,95 @@ export function useValidateSeq<T = unknown>(
   }
 
   async function validate(): Promise<boolean> {
+    // Дедупликация: если валидация уже запущена — возвращает существующее обещание
+    if (pendingValidation !== null) {
+      return pendingValidation
+    }
+
     if (toValue(options.disabled)) {
       return true
     }
 
     isValidating.value = true
-    let timeoutId: ReturnType<typeof setTimeout> | undefined
 
-    try {
-      const externalError = toValue(options.error)
+    async function runValidation(): Promise<boolean> {
+      let timeoutId: ReturnType<typeof setTimeout> | undefined
 
-      if (externalError === true) {
-        const externalMessage = toValue(options.errorMessage)
-        invokeValidationError(externalMessage)
-        return false
-      }
+      try {
+        const externalError = toValue(options.error)
 
-      const currentRules = toValue(options.rules) || []
+        if (externalError === true) {
+          const externalMessage = toValue(options.errorMessage)
+          invokeValidationError(externalMessage)
+          return false
+        }
 
-      for (const rule of currentRules) {
-        try {
-          const rulePromise = Promise.resolve(rule(toValue(model)))
-          let result: string | boolean | void
+        const currentRules = toValue(options.rules) || []
 
-          if (typeof timeoutMs === 'number' && timeoutMs > 0) {
-            const timeoutPromise = new Promise<string | boolean | void>((_, reject) => {
-              timeoutId = setTimeout(() => reject(new Error('[Unstyled-vue]: Timeout.')), timeoutMs)
-            })
+        for (const rule of currentRules) {
+          try {
+            const rulePromise = Promise.resolve(rule(toValue(model)))
+            let result: string | boolean | void
 
-            result = await Promise.race([rulePromise, timeoutPromise])
+            if (typeof timeoutMs === 'number' && timeoutMs > 0) {
+              const timeoutPromise = new Promise<string | boolean | void>((_, reject) => {
+                timeoutId = setTimeout(() => reject(new Error('[Unstyled-vue]: Timeout.')), timeoutMs)
+              })
 
+              result = await Promise.race([rulePromise, timeoutPromise])
+
+              if (timeoutId) {
+                clearTimeout(timeoutId)
+              }
+            } else {
+              result = await rulePromise
+            }
+
+            if (toValue(options.disabled)) {
+              return true
+            }
+
+            if (result === false || typeof result === 'string') {
+              invokeValidationError(result === false ? '' : result)
+              return false
+            }
+          } catch (error: unknown) {
             if (timeoutId) {
               clearTimeout(timeoutId)
             }
-          } else {
-            result = await rulePromise
-          }
 
-          if (toValue(options.disabled)) {
-            return true
-          }
+            if (toValue(options.disabled)) {
+              return true
+            }
 
-          if (result === false || typeof result === 'string') {
-            invokeValidationError(result === false ? '' : result)
+            if (error instanceof Error) {
+              invokeValidationError(
+                error.message === '[Unstyled-vue]: Timeout.'
+                  ? options.timeout?.message
+                  : '[Unstyled-vue]: An error occurred during validation.',
+              )
+            } else {
+              invokeValidationError('[Unstyled-vue]: Unknown error during validation.')
+            }
+
             return false
           }
-        } catch (error: unknown) {
-          if (timeoutId) {
-            clearTimeout(timeoutId)
-          }
-
-          if (toValue(options.disabled)) {
-            return true
-          }
-
-          if (error instanceof Error) {
-            invokeValidationError(
-              error.message === '[Unstyled-vue]: Timeout.'
-                ? options.timeout?.message
-                : '[Unstyled-vue]: An error occurred during validation.',
-            )
-          } else {
-            invokeValidationError('[Unstyled-vue]: Unknown error during validation.')
-          }
-
-          return false
         }
-      }
 
-      internalErrorExist.value = false
-      internalErrorMsg.value = ''
-      return true
+        internalErrorExist.value = false
+        internalErrorMsg.value = ''
+        return true
+      } finally {
+        isValidating.value = false
+      }
+    }
+
+    pendingValidation = runValidation()
+
+    try {
+      return await pendingValidation
     } finally {
-      isValidating.value = false
+      pendingValidation = null
     }
   }
 

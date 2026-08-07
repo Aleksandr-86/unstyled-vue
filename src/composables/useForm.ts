@@ -15,7 +15,7 @@ interface UseFormReturn {
   /**
    * Флаг, указывающий, что форма находится в процессе валидации
    */
-  isSubmitting: Ref<boolean>
+  isFormValidating: Ref<boolean>
 
   /**
    * Сброс ошибок валидации и вызов функций очистки полей формы
@@ -32,12 +32,9 @@ interface UseFormReturn {
 }
 
 export function useForm(): UseFormReturn {
-  const formFields = ref<Record<string, RegisteredField>>({})
-  const isSubmitting = ref(false)
-
-  // const isFormValidating = computed(() => {
-  //   return Object.values(formFields.value).some((field) => field.isValidating.value)
-  // })
+  // const formFields = ref<Record<string, RegisteredField>>({})
+  const formFields: Record<string, RegisteredField> = {}
+  const isFormValidating = ref(false)
 
   function registerFormField(
     uid: string,
@@ -47,7 +44,7 @@ export function useForm(): UseFormReturn {
     resetError: () => void,
     validate: () => Promise<boolean>,
   ) {
-    formFields.value[uid] = {
+    formFields[uid] = {
       isValidating,
       clearField,
       focus,
@@ -57,16 +54,15 @@ export function useForm(): UseFormReturn {
   }
 
   function unregisterFormField(uid: string): void {
-    delete formFields.value[uid]
+    delete formFields[uid]
   }
 
   async function validateForm(): Promise<boolean> {
     // Защита от повторной валидации формы
-    // if (isSubmitting.value) return false
+    if (isFormValidating.value) return false
+    isFormValidating.value = true
 
-    isSubmitting.value = true
-
-    const fieldEntries = Object.entries(formFields.value)
+    const fieldEntries = Object.entries(formFields)
     const promises = fieldEntries.map((entry) => entry[1].validate())
 
     try {
@@ -93,23 +89,23 @@ export function useForm(): UseFormReturn {
 
           const firstFailedElement = elements[0]
           if (firstFailedElement) {
-            formFields.value[firstFailedElement.id]?.focus()
+            formFields[firstFailedElement.id]?.focus()
           }
         }
       }
 
       return results.every((result) => result === true)
     } finally {
-      isSubmitting.value = false
+      isFormValidating.value = false
     }
   }
 
   function resetErrors(): void {
-    Object.values(formFields.value).forEach((field) => field.resetError())
+    Object.values(formFields).forEach((field) => field.resetError())
   }
 
   function clearForm(): void {
-    Object.values(formFields.value).forEach((field) => field.clearField())
+    Object.values(formFields).forEach((field) => field.clearField())
   }
 
   provide(FormContextKey, {
@@ -117,5 +113,5 @@ export function useForm(): UseFormReturn {
     unregisterFormField,
   })
 
-  return { isSubmitting, clearForm, resetErrors, validateForm }
+  return { isFormValidating, clearForm, resetErrors, validateForm }
 }

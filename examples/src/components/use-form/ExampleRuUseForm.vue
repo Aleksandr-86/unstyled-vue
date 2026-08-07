@@ -7,7 +7,7 @@ import { delay } from '../../../src/utils/delay.ts'
 import ExampleButton from '../ExampleButton.vue'
 import ExampleValidatedInput from './ExampleValidatedInput.vue'
 
-const { clearForm, isSubmitting, resetErrors, validateForm } = useForm()
+const { clearForm, isFormValidating, resetErrors, validateForm } = useForm()
 
 const formHasErrors = ref<boolean | undefined>(undefined)
 
@@ -43,11 +43,12 @@ function onResetForm() {
 
 /** Синхронные правила */
 const isRequiredSync: Rule<string> = (value) => !!value || 'Поле обязательно для заполнения'
-const hasMinLength: Rule<string> = (value) => value.length >= 4 || 'Требуется ввести не менее 4 символов'
+// const hasMinLength: Rule<string> = (value) => value.length >= 4 || 'Требуется ввести не менее 4 символов'
 
 /** Асинхронное правило */
-const checkRemoteAsync: Rule<string> = async (value: string) => {
-  await delay(5000)
+const checkRemoteAsync: Rule<string> = async (value) => {
+  await delay(4000)
+  console.log('checkRemoteAsync')
   return value !== 'admin' || 'Этот логин уже занят'
 }
 </script>
@@ -67,15 +68,20 @@ const checkRemoteAsync: Rule<string> = async (value: string) => {
       </h3>
 
       <div>
-        <ExampleValidatedInput label="Логин" :rules="[isRequiredSync, hasMinLength, checkRemoteAsync]" />
-        <ExampleValidatedInput label="Пароль" :rules="[isRequiredSync, hasMinLength]" />
+        <ExampleValidatedInput label="Логин" :rules="[isRequiredSync, checkRemoteAsync]" />
+        <ExampleValidatedInput label="Пароль" :rules="[isRequiredSync]" />
       </div>
     </form>
 
     <div class="flex flex-wrap gap-4">
       <ExampleButton class="w-32" color="green" label="Сбросить ошибки" @click="onResetErrors" />
       <ExampleButton class="w-32" color="green" label="Сбросить форму" @click="onResetForm" />
-      <ExampleButton class="w-32" form="auth-form" :label="isSubmitting ? 'Проверка...' : 'Отправить'" type="submit" />
+      <ExampleButton
+        class="w-32"
+        form="auth-form"
+        :label="isFormValidating ? 'Проверка...' : 'Отправить'"
+        type="submit"
+      />
     </div>
   </div>
 </template>
