@@ -4,15 +4,11 @@ import { computed } from 'vue'
 
 import type { BaseInputModel } from '@/index.ts'
 
-import type { Rule } from '../../../src/types/common-types'
-
 const model = defineModel<BaseInputModel>()
 
 interface ExampleInput extends ExampleState {
-  kind?: 'base' | 'use-check'
   label?: string
   placeholder?: string
-  rules?: Rule[]
   withStates?: boolean
 }
 
