@@ -14,7 +14,7 @@ import {
 import type { UseValidateOptions } from '../types/common-types'
 import { FormContextKey } from '../types/injection-keys'
 
-interface UseValidateReturn {
+interface UseValidateSeqReturn {
   /**
    * Вычисляемое свойство отражающее факт наличия ошибки
    * (A computed property that reflects the presence of an error)
@@ -56,7 +56,7 @@ interface UseValidateReturn {
 export function useValidateSeq<T = unknown>(
   model: MaybeRefOrGetter<T>,
   options: UseValidateOptions = {},
-): UseValidateReturn {
+): UseValidateSeqReturn {
   const uid = useId()
   const formContext = inject(FormContextKey, null)
   const timeoutMs = options.timeout?.ms

@@ -1,19 +1,17 @@
+<!-- #region example-validated-input -->
 <script setup lang="ts">
 import type { ExampleState } from '../../../../docs/.vitepress/theme/components/ExampleContainer.vue'
 import type { BaseInputModel } from '../../../../src/components/base-input/index.ts'
 import { useValidateSeq } from '../../../../src/composables/useValidateSeq'
 import type { Rule } from '../../../../src/types/common-types'
-import BaseClear from '../base/BaseClear.vue'
-import BaseLoader from '../base/BaseLoader.vue'
+import BaseClear from '../../components/base/BaseClear.vue'
+import BaseLoader from '../../components/base/BaseLoader.vue'
 
 const model = defineModel<BaseInputModel>()
 
 interface ExampleInput extends ExampleState {
-  kind?: 'base' | 'use-check'
   label?: string
-  placeholder?: string
   rules?: Rule<string>[]
-  withStates?: boolean
 }
 
 const { rules } = defineProps<ExampleInput>()
@@ -26,7 +24,6 @@ const { errorExist, errorMsg, isValidating, uid, validate } = useValidateSeq(mod
 
 <template>
   <div class="flex w-full flex-col gap-y-1">
-    <div>errorExist {{ errorExist }}</div>
     <label class="text-xs" :for="uid">{{ label }}</label>
 
     <div
@@ -46,8 +43,7 @@ const { errorExist, errorMsg, isValidating, uid, validate } = useValidateSeq(mod
             ? 'selection:bg-my-error placeholder:text-my-error/50'
             : 'selection:bg-my-label placeholder:text-my-label/50'
         "
-        :placeholder
-        @blur="validate()"
+        @blur="validate"
       />
       <BaseLoader v-if="isValidating" :class="errorExist ? 'text-my-error' : 'text-my-label'" />
       <BaseClear
@@ -61,3 +57,4 @@ const { errorExist, errorMsg, isValidating, uid, validate } = useValidateSeq(mod
     <div class="text-my-error h-4 text-xs">{{ errorMsg }}</div>
   </div>
 </template>
+<!-- #endregion example-validated-input -->

@@ -1,16 +1,16 @@
-<!-- #region example-en-use-validate-seq -->
+<!-- #region example-ru-use-validate-seq -->
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import type { ExampleState } from '../../../../docs/.vitepress/theme/components/ExampleContainer.vue'
 import BaseInput from '../../../../src/components/base-input/BaseInput.vue'
 import { useValidateSeq } from '../../../../src/composables/useValidateSeq'
 import type { BaseInputModel } from '../../../../src/index'
-import type { ValidationError } from '../../../../src/types/common-types.ts'
+import type { ValidationError } from '../../../../src/types/common-types'
+import BaseClear from '../../components/base/BaseClear.vue'
+import BaseLoader from '../../components/base/BaseLoader.vue'
+import ExampleButton from '../../components/ExampleButton.vue'
 import { delay } from '../../utils/delay.ts'
-import BaseClear from '../base/BaseClear.vue'
-import BaseLoader from '../base/BaseLoader.vue'
-import ExampleButton from '../ExampleButton.vue'
 
 const model = defineModel<BaseInputModel>()
 
@@ -26,32 +26,43 @@ interface ExampleUseValidateSeqProps extends ExampleState {
 
 const { timeout } = defineProps<ExampleUseValidateSeqProps>()
 
-/** Synchronous rule */
-const isRequiredSync = (value: string) => !!value || 'Field is required'
+/** Синхронное правило */
+const isRequiredSync = (value: string) => !!value || 'Поле обязательно для заполнения'
 
-/** Asynchronous rule */
+/** Асинхронное правило */
 const checkRemoteAsync = async (value: string) => {
   await delay(2000)
-  return value !== 'admin' || 'This login is already taken'
+  return value !== 'admin' || 'Этот логин уже занят'
 }
 
-/** Array of rules */
+/** Массив правил */
 const rules = [isRequiredSync, checkRemoteAsync]
 
 const disabled = ref(false)
 const error = ref(false)
 const errorMessage = ref<string>('')
+const fieldHasError = ref<boolean | undefined>(undefined)
+
+const validationState = computed(() => {
+  if (fieldHasError.value === undefined) {
+    return 'не выполнялась'
+  } else if (fieldHasError.value === true) {
+    return 'выполнена с ошибками'
+  } else {
+    return 'выполнена без ошибок'
+  }
+})
 
 function onValidationError(evt: ValidationError) {
   console.log('onValidationError', evt)
 }
 
 const { errorExist, errorMsg, isValidating, resetError, uid, validate } = useValidateSeq(model, {
-  rules,
-  timeout,
+  disabled,
   error,
   errorMessage,
-  disabled,
+  rules,
+  timeout,
 
   onValidationError,
 })
@@ -59,6 +70,12 @@ const { errorExist, errorMsg, isValidating, resetError, uid, validate } = useVal
 function invokeValidate() {
   validate()
     .then((evt) => {
+      if (evt === true) {
+        fieldHasError.value = false
+      } else {
+        fieldHasError.value = true
+      }
+
       console.warn('invokeValidate evt', evt)
     })
     .catch((err) => {
@@ -69,6 +86,17 @@ function invokeValidate() {
 
 <template>
   <div class="flex w-full flex-col items-end gap-y-3">
+    <h3 class="text-lg font-semibold">
+      Валидация поля:
+      <span
+        :class="{
+          'text-my-success': fieldHasError === false,
+          'text-my-error': fieldHasError === true,
+        }"
+        >{{ validationState }}</span
+      >
+    </h3>
+
     <div class="flex flex-wrap gap-2 text-sm">
       <button
         class="rounded-md p-1"
@@ -123,9 +151,9 @@ function invokeValidate() {
     </div>
 
     <div class="flex flex-wrap gap-3">
-      <ExampleButton color="green" label="Reset error" @click="resetError" />
-      <ExampleButton label="Validate manually" @click="invokeValidate" />
+      <ExampleButton color="green" label="Сбросить ошибку" @click="resetError" />
+      <ExampleButton label="Проверить вручную" @click="invokeValidate" />
     </div>
   </div>
 </template>
-<!-- #endregion example-en-use-validate-seq -->
+<!-- #endregion example-ru-use-validate-seq -->

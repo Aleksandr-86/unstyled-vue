@@ -27,7 +27,7 @@ const composableData = {
   <ComposableTable
     :composable="composableData"
     :interfaces="[data.UseValidateOptions, data.Rule, data.ValidationError]"
-    :return-values="data.UseValidateReturn"
+    :return-values="data.UseValidateSeqReturn"
   >
 <template #description>
 <h3 class="mt-2! mb-0!">Составная функция для последовательной валидации поля</h3>
@@ -46,7 +46,7 @@ const composableData = {
 <details>
 <summary class="select-none cursor-pointer">Код используемого компонента</summary>
 
-<<< @/../examples/src/components/use-validate-seq/ExampleRuUseValidateSeq.vue#example-ru-use-validate-seq {47-55vue}
+<<< @/../examples/src/composables/use-validate-seq/ExampleRuUseValidateSeq.vue#example-ru-use-validate-seq {59-67vue}
 
 </details>
 

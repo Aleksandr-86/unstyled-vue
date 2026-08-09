@@ -8,7 +8,6 @@ const exampleModel1 = ref('admin')
 const exampleModel2 = ref('admin')
 
 const composableData = {
-  description: 'A composable function for sequential field validation',
   parameters: [
     {
       name: 'model',
@@ -28,7 +27,7 @@ const composableData = {
   <ComposableTable
     :composable="composableData"
     :interfaces="[data.UseValidateOptions, data.Rule, data.ValidationError]"
-    :return-values="data.UseValidateReturn"
+    :return-values="data.UseValidateSeqReturn"
   >
 <template #description>
 <h3 class="mt-2! mb-0!">A composable function for sequential field validation</h3>
@@ -48,7 +47,7 @@ const composableData = {
 <details>
 <summary class="select-none cursor-pointer">Used component code</summary>
 
-<<< @/../examples/src/components/use-validate-seq/ExampleEnUseValidateSeq.vue#example-en-use-validate-seq {47-55vue}
+<<< @/../examples/src/composables/use-validate-seq/ExampleEnUseValidateSeq.vue#example-en-use-validate-seq {59-67vue}
 
 </details>
 

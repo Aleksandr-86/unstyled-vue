@@ -1,38 +1,47 @@
-import { provide, type Ref, ref } from 'vue'
+import type { Ref } from 'vue'
+import { provide, ref } from 'vue'
 
 import { FormContextKey } from '../types/injection-keys'
 
 interface RegisteredField {
+  /** Флаг, указывающий, что поле находится в процессе валидации */
   isValidating: Ref<boolean>
 
+  /** Флаг, указывающий, что поле находится в процессе валидации */
   clearField: () => void
+  /** Фокусировка на поле */
   focus: () => void
+  /** Сброс ошибки валидации */
   resetError: () => void
+  /** Валидация поля */
   validate: () => Promise<boolean>
 }
 
 interface UseFormReturn {
   /**
    * Флаг, указывающий, что форма находится в процессе валидации
+   * (Flag indicating that the form is currently validating)
    */
   isFormValidating: Ref<boolean>
 
   /**
-   * Сброс ошибок валидации и вызов функций очистки полей формы
+   * Сброс ошибок валидации и очистка полей формы
+   * (Resets validation errors and clears form fields)
    */
   clearForm: () => void
   /**
    * Сброс ошибок валидации для всех полей формы
+   * (Resets validation errors for all form fields)
    */
   resetErrors: () => void
   /**
-   * Главный метод валидации всей формы с автофокусом
+   * Валидация полей формы
+   * (Validates form fields)
    */
   validateForm: () => Promise<boolean>
 }
 
 export function useForm(): UseFormReturn {
-  // const formFields = ref<Record<string, RegisteredField>>({})
   const formFields: Record<string, RegisteredField> = {}
   const isFormValidating = ref(false)
 
@@ -75,7 +84,7 @@ export function useForm(): UseFormReturn {
         // Поиск всех элементов на странице, соответствующих ошибочным uid
         const elements = failedUids
           .map((uid) => document.getElementById(uid))
-          .filter((el): el is HTMLElement => el !== null && el.isConnected)
+          .filter((el): el is HTMLElement => el instanceof HTMLElement && el.isConnected)
 
         if (elements.length > 0) {
           // Сортировка элементов по их фактическому положению в ОМД (сверху вниз)
