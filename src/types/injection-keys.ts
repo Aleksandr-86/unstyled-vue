@@ -3,10 +3,11 @@ import type { InjectionKey, Ref } from 'vue'
 export interface FormContext {
   registerFormField(
     uid: string,
-    validateFn: () => Promise<boolean>,
-    resetFn: () => void,
-    isValidatingRef: Ref<boolean>,
-    focusFn: () => void,
+    isValidating: Ref<boolean>,
+    clearField: () => void,
+    focus: () => void,
+    resetError: () => void,
+    validate: () => Promise<boolean>,
   ): void
   unregisterFormField(uid: string): void
 }

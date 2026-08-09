@@ -70,7 +70,27 @@ In this example, the custom class `accent-my-label` (previously used to tint the
   </template>
 </ExampleContainer>
 
-<<< @/../examples/src/components/ExampleCheckbox.vue#example-checkbox-states-template {6-10html}
+<<< @/../examples/src/components/ExampleCheckbox.vue#example-checkbox-states-tailwind-template {6-10html}
+
+In the example above, styling is handled as follows: the corresponding attributes (`disabled`, `aria-invalid`, `readonly`, `required`) are passed to the `<input>` element, while `Tailwind` classes with state modifiers react to these attributes and apply the necessary styles. <br />
+Alternatively, you can combine state modifiers with `Vue` dynamic classes, placing the main emphasis on the dynamic classes. Example:
+
+<ExampleContainer disabled error readonly required>
+  <template #default="{ disabled, error, readonly, required, modelValue, updateModelValue }">
+    <ExampleCheckbox
+      :disabled
+      :error
+      kind="states-classes"
+      label="Label"
+      :model-value="modelValue"
+      :readonly
+      :required
+      @update:model-value="updateModelValue"
+    />
+  </template>
+</ExampleContainer>
+
+<<< @/../examples/src/components/ExampleCheckbox.vue#example-checkbox-states-classes {ts}
 
 ### Checkbox with an Icon
 

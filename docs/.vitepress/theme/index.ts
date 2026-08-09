@@ -15,10 +15,13 @@ import ExampleButton from '../../../examples/src/components/ExampleButton.vue'
 
 import BaseCheckbox from '../../../src/components/base-checkbox/BaseCheckbox.vue'
 import ExampleCheckbox from '../../../examples/src/components/ExampleCheckbox.vue'
+import ExampleRuUseForm from '../../../examples/src/composables/use-form/ExampleRuUseForm.vue'
+import ExampleEnUseForm from '../../../examples/src/composables/use-form/ExampleEnUseForm.vue'
+import ExampleValidatedInput from '../../../examples/src/composables/use-form/ExampleValidatedInput.vue'
 import BaseInput from '../../../src/components/base-input/BaseInput.vue'
 import ExampleInput from '../../../examples/src/components/ExampleInput.vue'
-import ExampleRuUseValidateSeq from '../../../examples/src/components/use-validate-seq/ExampleRuUseValidateSeq.vue'
-import ExampleEnUseValidateSeq from '../../../examples/src/components/use-validate-seq/ExampleEnUseValidateSeq.vue'
+import ExampleRuUseValidateSeq from '../../../examples/src/composables/use-validate-seq/ExampleRuUseValidateSeq.vue'
+import ExampleEnUseValidateSeq from '../../../examples/src/composables/use-validate-seq/ExampleEnUseValidateSeq.vue'
 import BaseTable from '../../../src/components/base-table/BaseTable.vue'
 import ExampleTable from '../../../examples/src/components/ExampleTable.vue'
 import BaseTextarea from '../../../src/components/base-textarea/BaseTextarea.vue'
@@ -37,6 +40,9 @@ export default {
 
     app.component('BaseCheckbox', BaseCheckbox)
     app.component('ExampleCheckbox', ExampleCheckbox)
+    app.component('ExampleRuUseForm', ExampleRuUseForm)
+    app.component('ExampleEnUseForm', ExampleEnUseForm)
+    app.component('ExampleValidatedInput', ExampleValidatedInput)
     app.component('BaseInput', BaseInput)
     app.component('ExampleInput', ExampleInput)
     app.component('ExampleRuUseValidateSeq', ExampleRuUseValidateSeq)

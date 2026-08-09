@@ -13,5 +13,6 @@ export const sidebarConfigEnglish: DefaultTheme.Sidebar = {
 
   '/en/composables': [
     { text: 'useValidate', link: '/en/composables/use-validate-seq' },
+    { text: 'useForm', link: '/en/composables/use-form' },
   ],
 }

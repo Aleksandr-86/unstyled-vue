@@ -8,7 +8,6 @@ const exampleModel1 = ref('admin')
 const exampleModel2 = ref('admin')
 
 const composableData = {
-  description: 'A composable function for sequential field validation',
   parameters: [
     {
       name: 'model',
@@ -28,8 +27,19 @@ const composableData = {
   <ComposableTable
     :composable="composableData"
     :interfaces="[data.UseValidateOptions, data.Rule, data.ValidationError]"
-    :return-values="data.UseValidateReturn"
-  />
+    :return-values="data.UseValidateSeqReturn"
+  >
+<template #description>
+<h3 class="mt-2! mb-0!">A composable function for sequential field validation</h3>
+</template>
+
+<template #subDescription>
+
+<h6 class="my-0!">Sequential validation refers to a verification order where a field value is checked step-by-step against each rule in the <span class="text-code">rules</span> array. The validation stops after the first encountered error or the successful completion of all checks.</h6>
+
+</template>
+</ComposableTable>
+
 </div>
 
 ## Examples
@@ -37,7 +47,7 @@ const composableData = {
 <details>
 <summary class="select-none cursor-pointer">Used component code</summary>
 
-<<< @/../examples/src/components/use-validate-seq/ExampleEnUseValidateSeq.vue#example-en-use-validate-seq {47-55vue}
+<<< @/../examples/src/composables/use-validate-seq/ExampleEnUseValidateSeq.vue#example-en-use-validate-seq {59-67vue}
 
 </details>
 
@@ -68,7 +78,7 @@ In the following example, the `timeout` property is passed to the `options` obje
 }
 ```
 
-This value limits the asynchronous validation time to `1` second and defines the returned message. Since the asynchronous rule simulation takes longer than `1` second, an error with the text `Validation server request timed out` will be returned.
+This object limits the asynchronous validation time to `1` second and specifies the message text to be returned if it times out. Since the asynchronous rule takes `2` seconds in this example, the `error` and `errorMessage` computed properties returned by the `useValidateSeq` composable function will be set to `true` and `Validation server request timed out` respectively.
 
 <ExampleContainer #default="{ modelValue, updateModelValue }" v-model="exampleModel2">
 <ExampleEnUseValidateSeq

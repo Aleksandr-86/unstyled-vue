@@ -8,7 +8,6 @@ const exampleModel1 = ref('admin')
 const exampleModel2 = ref('admin')
 
 const composableData = {
-  description: 'Составная функция для последовательной валидации полей',
   parameters: [
     {
       name: 'model',
@@ -28,8 +27,18 @@ const composableData = {
   <ComposableTable
     :composable="composableData"
     :interfaces="[data.UseValidateOptions, data.Rule, data.ValidationError]"
-    :return-values="data.UseValidateReturn"
-  />
+    :return-values="data.UseValidateSeqReturn"
+  >
+<template #description>
+<h3 class="mt-2! mb-0!">Составная функция для последовательной валидации поля</h3>
+</template>
+
+<template #subDescription>
+
+<h6 class="my-0!">Под последовательной валидацией понимается порядок проверки, при котором значение поля поочерёдно проверяется каждым правилом массива <span class="text-code">rules</span>. Проверка останавливается после первой найденной ошибки или успешного выполнения всех проверок.</h6>
+</template>
+</ComposableTable>
+
 </div>
 
 ## Примеры
@@ -37,7 +46,7 @@ const composableData = {
 <details>
 <summary class="select-none cursor-pointer">Код используемого компонента</summary>
 
-<<< @/../examples/src/components/use-validate-seq/ExampleRuUseValidateSeq.vue#example-ru-use-validate-seq {47-55vue}
+<<< @/../examples/src/composables/use-validate-seq/ExampleRuUseValidateSeq.vue#example-ru-use-validate-seq {59-67vue}
 
 </details>
 
@@ -68,7 +77,7 @@ placeholder="Обязательное поле"
 }
 ```
 
-Это значение ограничивает время асинхронной проверки `1` секундой и определяет возвращаемое сообщение. Поскольку имитация асинхронного правила длится дольше одной секунды, вернётся ошибка с текстом `Превышено время запроса к серверу валидации`.
+Этот объект ограничивает время асинхронной проверки `1` секундой и задаёт текст сообщения, которое вернётся при его превышении. Так как в данном примере асинхронное правило длится `2` секунды, то возвращаемые составной функцией `useValidateSeq` вычисляемые свойства `error` и `errorMessage` будут иметь значения `true` и `Превышено время запроса к серверу валидации` соответственно.
 
 <ExampleContainer #default="{ modelValue, updateModelValue }" v-model="exampleModel2">
 <ExampleRuUseValidateSeq

@@ -60,7 +60,7 @@ import { data } from '../props.data.ts'
     <ExampleCheckbox
       :disabled
       :error
-      kind="states"
+      kind="states-tailwind"
       label="Текст"
       :model-value="modelValue"
       :readonly
@@ -70,7 +70,27 @@ import { data } from '../props.data.ts'
   </template>
 </ExampleContainer>
 
-<<< @/../examples/src/components/ExampleCheckbox.vue#example-checkbox-states-template {6-10html}
+<<< @/../examples/src/components/ExampleCheckbox.vue#example-checkbox-states-tailwind-template {6-10html}
+
+В примере выше стилизация выполняется следующим образом: в элемент `<input>` передаются соответствующие атрибуты (`disabled`, `aria-invalid`, `readonly`, `required`), а классы `Tailwind` с модификаторами состояний реагируют на эти атрибуты и применяют нужные стили. <br />
+Также возможно использование модификаторов состояний и динамических классов `Vue` с акцентом на динамические классы. Пример:
+
+<ExampleContainer disabled error readonly required>
+  <template #default="{ disabled, error, readonly, required, modelValue, updateModelValue }">
+    <ExampleCheckbox
+      :disabled
+      :error
+      kind="states-classes"
+      label="Текст"
+      :model-value="modelValue"
+      :readonly
+      :required
+      @update:model-value="updateModelValue"
+    />
+  </template>
+</ExampleContainer>
+
+<<< @/../examples/src/components/ExampleCheckbox.vue#example-checkbox-states-classes {ts}
 
 ### Поле выбора с иконкой
 

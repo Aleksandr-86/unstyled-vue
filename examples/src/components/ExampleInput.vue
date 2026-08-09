@@ -7,7 +7,7 @@ import type { BaseInputModel } from '@/index.ts'
 const model = defineModel<BaseInputModel>()
 
 interface ExampleInput extends ExampleState {
-  kind?: 'base' | 'use-check'
+  label?: string
   placeholder?: string
   withStates?: boolean
 }
@@ -32,9 +32,9 @@ const stateClasses = computed(() => ({
 <template>
   <!-- #region example-input-template -->
   <div class="relative w-full">
+    <label class="text-sm empty:hidden">{{ label }}</label>
     <BaseInput
       v-model="model"
-      autocomplete="nope"
       :class="withStates ? stateClasses : basicClasses"
       :disabled
       name="example-input"

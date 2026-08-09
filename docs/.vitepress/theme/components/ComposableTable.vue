@@ -54,9 +54,10 @@ function transformDescription(description: LocalizedString) {
 </script>
 
 <template>
-  <template v-if="composable">
-    <h3 class="my-0!">{{ composable.description }}</h3>
+  <slot name="description"></slot>
+  <slot name="subDescription"></slot>
 
+  <template v-if="composable">
     <div class="flex flex-col gap-2">
       <h6 class="my-0!">{{ lang === 'ru' ? 'Параметры' : 'Parameters' }}</h6>
 

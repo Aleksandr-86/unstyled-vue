@@ -56,6 +56,10 @@ export interface UseValidateOptions {
   }
 
   /**
+   * Функция, вызываемая при сбросе значений элемента формы
+   */
+  onResetValue?: () => void
+  /**
    * Функция, вызываемая при возникновении ошибки валидации
    * (Callback function invoked when a validation error occurs)
    */
