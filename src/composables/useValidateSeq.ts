@@ -24,7 +24,7 @@ interface UseValidateSeqReturn {
    * Вычисляемое свойство отображающее сообщение об ошибке
    * (A computed property that displays an error message)
    */
-  errorMsg: ComputedRef<string | undefined>
+  errorMsg: ComputedRef<string>
   /**
    * Реактивная переменная для отслеживания процесса валидации
    * (Reactive variable for tracking the validation process)
@@ -60,9 +60,7 @@ export function useValidateSeq<T = unknown>(
   const uid = useId()
   const formContext = inject(FormContextKey, null)
   const timeoutMs = options.timeout?.ms
-
   const isValidating = ref(false)
-
   const internalErrorExist = ref(false)
   const internalErrorMsg = ref('')
 

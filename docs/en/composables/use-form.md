@@ -41,5 +41,5 @@ import { data } from '../../types.data.ts'
 The `useForm` composable function works in tandem with the `useValidateSeq` composable function.
 :::
 
-If the validated form contains errors, the first field from the top can receive focus upon completion of the validation process. For this focusing to be possible, the unique identifier `uid` returned by the `useValidateSeq` function should be passed to the `id` attribute of the validated field. <br />
-Clearing the form fields via the `clearForm` function is executed by calling the `onResetValue` field cleanup functions from the `options` parameter of the `useValidateSeq` composable. The logic for clearing field values is defined by the user for each individual field. The `clearForm` function merely initiates the execution of these field cleanup functions.
+If the validated form contains errors, the first invalid field from the top can receive focus once the validation process is complete. To enable this behavior, you must pass the unique identifier `uid` returned by the `useValidateSeq` composable function into the `id` attribute of the validated field. <br />
+Form fields are cleared during the `clearForm` function call by invoking the `onResetValue` callbacks provided in the `options` parameter of the `useValidateSeq` composable. The logic for clearing field values is user-defined for each individual field. The `clearForm` function merely triggers the execution of these `onResetValue` functions.
