@@ -4,11 +4,16 @@ import { defineConfig, devices } from '@playwright/experimental-ct-vue'
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './',
+  testDir: './tests',
+  testMatch: /.*\.(ct|integration)\.ts$/,
   /* The base directory, relative to the config file, for snapshot files created with toMatchSnapshot and toHaveScreenshot. */
   snapshotDir: './__snapshots__',
-  /* Maximum time one test can run for. */
-  timeout: 10 * 1000,
+  // Максимальное время, в течение которого может выполняться один тест.
+  timeout: 5 * 1_000,
+  expect: {
+    // Максимальное время, в течение которого может выполняться проверка вроде toHaveClass или toBeVisible.
+    timeout: 500,
+  },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
