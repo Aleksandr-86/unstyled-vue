@@ -9,7 +9,7 @@ export default defineConfig({
   /* The base directory, relative to the config file, for snapshot files created with toMatchSnapshot and toHaveScreenshot. */
   snapshotDir: './__snapshots__',
   // Максимальное время, в течение которого может выполняться один тест.
-  timeout: 5 * 1_000,
+  timeout: 3 * 1_000,
   expect: {
     // Максимальное время, в течение которого может выполняться проверка вроде toHaveClass или toBeVisible.
     timeout: 500,

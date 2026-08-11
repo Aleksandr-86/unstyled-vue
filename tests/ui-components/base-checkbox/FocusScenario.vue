@@ -11,8 +11,8 @@ defineProps<BaseCheckboxWrapperProps>()
 
 <template>
   <div>
-    <input data-testid="first-input" />
+    <input data-testid="first" />
     <BaseCheckbox :disabled label="Согласен с условиями" :readonly />
-    <input data-testid="second-input" />
+    <input data-testid="last" />
   </div>
 </template>

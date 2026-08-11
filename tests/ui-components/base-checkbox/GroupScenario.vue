@@ -14,6 +14,6 @@ const model = defineModel<CheckboxItem[]>()
   <div>
     <div>model: {{ model }}</div>
     <BaseCheckbox v-model="model" :classes="{ input: 'first' }" :value="values[0]" />
-    <BaseCheckbox v-model="model" :classes="{ input: 'second' }" :value="values[1]" />
+    <BaseCheckbox v-model="model" :classes="{ input: 'last' }" :value="values[1]" />
   </div>
 </template>
