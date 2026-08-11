@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import type { CheckboxItem } from '@/index.ts'
 
 import BaseCheckbox from '../../../src/components/base-checkbox/BaseCheckbox.vue'
 
-const model = ref<string[]>([])
+defineProps<{
+  values: [CheckboxItem, CheckboxItem]
+}>()
+
+const model = defineModel<CheckboxItem[]>()
 </script>
 
 <template>
   <div>
     <div>model: {{ model }}</div>
-    <BaseCheckbox v-model="model" data-testid="apple" value="apple" />
-    <BaseCheckbox v-model="model" data-testid="banana" value="banana" />
+    <BaseCheckbox v-model="model" :classes="{ input: 'first' }" :value="values[0]" />
+    <BaseCheckbox v-model="model" :classes="{ input: 'second' }" :value="values[1]" />
   </div>
 </template>

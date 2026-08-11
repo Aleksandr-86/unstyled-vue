@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/experimental-ct-vue'
+import { ref } from 'vue'
 
 import BaseCheckbox from '@/components/base-checkbox/BaseCheckbox.vue'
 
 import FocusScenario from './FocusScenario.vue'
+import GroupScenario from './GroupScenario.vue'
 
 test.describe('Базовая отрисовка', () => {
   test('отрисовывает заданный текст метки', async ({ mount }) => {
@@ -213,7 +215,7 @@ test.describe('Правильно отображает значение моде
       await expect(input).not.toBeChecked()
     })
 
-    test('modelValue: "off", trueValue: "on", falseValue: "off"', async ({ mount }) => {
+    test("modelValue: 'off', trueValue: 'on', falseValue: 'off'", async ({ mount }) => {
       const component = await mount(BaseCheckbox, { props: { modelValue: 'off', trueValue: 'on', falseValue: 'off' } })
       const input = component.locator('input')
 
@@ -227,7 +229,7 @@ test.describe('Правильно отображает значение моде
       await expect(input).not.toBeChecked()
     })
 
-    test.only('modelValue: { id: 3, name: "apple" }, trueValue: { id: 2, name: "lemon" }, falseValue: { id: 3, name: "apple" }', async ({
+    test("modelValue: { id: 3, name: 'apple' }, trueValue: { id: 2, name: 'lemon' }, falseValue: { id: 3, name: 'apple' }", async ({
       mount,
     }) => {
       const component = await mount(BaseCheckbox, {
@@ -272,7 +274,7 @@ test.describe('Правильно отображает значение моде
       await expect(input).toBeChecked()
     })
 
-    test('modelValue: "on", trueValue: "on", falseValue: "off"', async ({ mount }) => {
+    test("modelValue: 'on', trueValue: 'on', falseValue: 'off'", async ({ mount }) => {
       const component = await mount(BaseCheckbox, { props: { modelValue: 'on', trueValue: 'on', falseValue: 'off' } })
       const input = component.locator('input')
 
@@ -286,7 +288,7 @@ test.describe('Правильно отображает значение моде
       await expect(input).toBeChecked()
     })
 
-    test('modelValue: { id: 2, name: "lemon" }, trueValue: { id: 2, name: "lemon" }, falseValue: { id: 3, name: "apple" }', async ({
+    test("modelValue: { id: 2, name: 'lemon' }, trueValue: { id: 2, name: 'lemon' }, falseValue: { id: 3, name: 'apple' }", async ({
       mount,
     }) => {
       const component = await mount(BaseCheckbox, {
@@ -300,5 +302,277 @@ test.describe('Правильно отображает значение моде
 
       await expect(input).toBeChecked()
     })
+  })
+})
+
+test.describe('Правильно отображает значение модели при групповом использовании', () => {
+  test("modelValue: [], values: ['null', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [], values: ['null', 'apple'] } })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test("modelValue: [null], values: ['null', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [null], values: ['null', 'apple'] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test("modelValue: [apple], values: ['null', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: ['apple'], values: ['null', 'apple'] } })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test("modelValue: [null, apple], values: ['null', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [null, 'apple'], values: ['null', 'apple'] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test("modelValue: [apple, null], values: ['null', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: ['apple', null], values: ['null', 'apple'] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test("modelValue: [], values: ['lemon', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [], values: ['lemon', 'apple'] } })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test("modelValue: ['lemon'], values: ['lemon', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: ['lemon'], values: ['lemon', 'apple'] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test("modelValue: ['apple'], values: ['lemon', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: ['apple'], values: ['lemon', 'apple'] } })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test("modelValue: ['lemon', 'apple'], values: ['lemon', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, {
+      props: { modelValue: ['lemon', 'apple'], values: ['lemon', 'apple'] },
+    })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test("modelValue: ['apple', 'lemon'], values: ['lemon', 'apple']", async ({ mount }) => {
+    const component = await mount(GroupScenario, {
+      props: { modelValue: ['lemon', 'apple'], values: ['lemon', 'apple'] },
+    })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test('modelValue: [], values: [2, 3]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [], values: [2, 3] } })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test('modelValue: [2], values: [2, 3]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [2], values: [2, 3] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test('modelValue: [3], values: [2, 3]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [3], values: [2, 3] } })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test('modelValue: [2, 3], values: [2, 3]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [2, 3], values: [2, 3] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test('modelValue: [3, 2], values: [2, 3]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [3, 2], values: [2, 3] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test('modelValue: [], values: [true, false]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [], values: [true, false] } })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test('modelValue: [true], values: [true, false]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [true], values: [true, false] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test('modelValue: [false], values: [true, false]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [false], values: [true, false] } })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test('modelValue: [true, false], values: [true, false]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [true, false], values: [true, false] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test('modelValue: [false, true], values: [true, false]', async ({ mount }) => {
+    const component = await mount(GroupScenario, { props: { modelValue: [false, true], values: [true, false] } })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test("modelValue: [], values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]", async ({ mount }) => {
+    const component = await mount(GroupScenario, {
+      props: {
+        modelValue: [],
+        values: [
+          { id: 2, name: 'lemon' },
+          { id: 3, name: 'apple' },
+        ],
+      },
+    })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test("modelValue: [{ id: 2, name: 'lemon' }], values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]", async ({
+    mount,
+  }) => {
+    const component = await mount(GroupScenario, {
+      props: {
+        modelValue: [{ id: 2, name: 'lemon' }],
+        values: [
+          { id: 2, name: 'lemon' },
+          { id: 3, name: 'apple' },
+        ],
+      },
+    })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test("modelValue: [{ id: 3, name: 'apple' }], values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]", async ({
+    mount,
+  }) => {
+    const component = await mount(GroupScenario, {
+      props: {
+        modelValue: [{ id: 3, name: 'apple' }],
+        values: [
+          { id: 2, name: 'lemon' },
+          { id: 3, name: 'apple' },
+        ],
+      },
+    })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test("modelValue: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }], values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]", async ({
+    mount,
+  }) => {
+    const component = await mount(GroupScenario, {
+      props: {
+        modelValue: [
+          { id: 2, name: 'lemon' },
+          { id: 3, name: 'apple' },
+        ],
+        values: [
+          { id: 2, name: 'lemon' },
+          { id: 3, name: 'apple' },
+        ],
+      },
+    })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test("modelValue: [{ id: 3, name: 'apple' }, { id: 2, name: 'lemon' }], values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]", async ({
+    mount,
+  }) => {
+    const component = await mount(GroupScenario, {
+      props: {
+        modelValue: [
+          { id: 3, name: 'apple' },
+          { id: 2, name: 'lemon' },
+        ],
+        values: [
+          { id: 2, name: 'lemon' },
+          { id: 3, name: 'apple' },
+        ],
+      },
+    })
+
+    await expect(component.locator('input.first')).toBeChecked()
+    await expect(component.locator('input.second')).toBeChecked()
+  })
+
+  test("modelValue: [{ id: 5, name: 'wrong data' }], values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]", async ({
+    mount,
+  }) => {
+    const component = await mount(GroupScenario, {
+      props: {
+        modelValue: [{ id: 5, name: 'wrong' }],
+        values: [
+          { id: 2, name: 'lemon' },
+          { id: 3, name: 'apple' },
+        ],
+      },
+    })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
+  })
+
+  test("modelValue: [{ id: 5, name: 'wrong' }, { id: 7, name: 'data' }], values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]", async ({
+    mount,
+  }) => {
+    const component = await mount(GroupScenario, {
+      props: {
+        modelValue: [
+          { id: 5, name: 'wrong' },
+          { id: 7, name: 'data' },
+        ],
+        values: [
+          { id: 2, name: 'lemon' },
+          { id: 3, name: 'apple' },
+        ],
+      },
+    })
+
+    await expect(component.locator('input.first')).not.toBeChecked()
+    await expect(component.locator('input.second')).not.toBeChecked()
   })
 })
