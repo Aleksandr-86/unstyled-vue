@@ -143,18 +143,18 @@ import { ref } from 'vue'
 
 import BaseCheckbox from '@/components/base-checkbox/BaseCheckbox.vue'
 
-const parentModel = ref<string>('')
+const model = ref<string>('')
 </script>
 
 <template>
-  <BaseCheckbox v-model="parentModel" :false-value="0" :true-value="1" />
+  <BaseCheckbox v-model="model" :false-value="0" :true-value="1" />
 </template>
 ```
 
 ```bash
 examples/src/App.vue:10:17 - error TS2322: Type 'string' is not assignable to type '0 | 0[] | undefined'.
 
-10   <BaseCheckbox v-model="parentModel" :false-value="0" :true-value="1" />
+10   <BaseCheckbox v-model="model" :false-value="0" :true-value="1" />
                    ~~~~~~~
 ```
 
@@ -165,12 +165,12 @@ import { ref } from 'vue'
 
 import BaseCheckbox from '@/components/base-checkbox/BaseCheckbox.vue'
 
-const parentModel = ref<string[]>([])
+const model = ref<string[]>([])
 </script>
 
 <template>
-  <BaseCheckbox v-model="parentModel" :value="5" />
-  <BaseCheckbox v-model="parentModel" :value="10" />
+  <BaseCheckbox v-model="model" :value="5" />
+  <BaseCheckbox v-model="model" :value="10" />
 </template>
 ```
 
@@ -179,7 +179,7 @@ examples/src/App.vue:10:17 - error TS2322: Type 'string[]' is not assignable to 
   Type 'string[]' is not assignable to type '5[]'.
     Type 'string' is not assignable to type '5'.
 
-10   <BaseCheckbox v-model="parentModel" :value="5" />
+10   <BaseCheckbox v-model="model" :value="5" />
                    ~~~~~~~
 
 
@@ -187,7 +187,7 @@ examples/src/App.vue:11:17 - error TS2322: Type 'string[]' is not assignable to 
   Type 'string[]' is not assignable to type '10[]'.
     Type 'string' is not assignable to type '10'.
 
-11   <BaseCheckbox v-model="parentModel" :value="10" />
+11   <BaseCheckbox v-model="model" :value="10" />
                    ~~~~~~~
 ```
 
@@ -199,10 +199,10 @@ import { ref } from 'vue'
 
 import BaseCheckbox from '@/components/base-checkbox/BaseCheckbox.vue'
 
-const parentModel = ref<string>('')
+const model = ref<string>('')
 </script>
 
 <template>
-  <BaseCheckbox v-model="parentModel" :true-value="null" />
+  <BaseCheckbox v-model="model" :true-value="null" />
 </template>
 ```
