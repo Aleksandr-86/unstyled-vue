@@ -26,6 +26,7 @@ const emit = defineEmits<BaseCheckboxEmits>()
 function onInputClick(evt: PointerEvent) {
   if (readonly) {
     evt.preventDefault()
+    evt.stopPropagation()
     return
   }
 
@@ -35,6 +36,7 @@ function onInputClick(evt: PointerEvent) {
 function onInputKeydownSpace(evt: KeyboardEvent) {
   if (readonly) {
     evt.preventDefault()
+    evt.stopPropagation()
   }
 }
 </script>
