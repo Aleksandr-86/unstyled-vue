@@ -17,6 +17,12 @@ type SingleModelCase = {
   props: Partial<BaseCheckboxProps<CheckboxItem>> & { modelValue?: CheckboxItem | CheckboxItem[] }
 }
 
+type SingleEventCase = {
+  title: string
+  props: Partial<BaseCheckboxProps<CheckboxItem>> & { modelValue?: CheckboxItem | CheckboxItem[] }
+  expected: CheckboxItem[]
+}
+
 type GroupModelCase = {
   title: string
   props: {
@@ -26,12 +32,19 @@ type GroupModelCase = {
   expected: [boolean, boolean]
 }
 
-type SingleEventCase = {
+type GroupEventCase = {
   title: string
-  props: Partial<BaseCheckboxProps<CheckboxItem>> & { modelValue?: CheckboxItem | CheckboxItem[] }
-  expected: CheckboxItem[]
+  values: [CheckboxItem, CheckboxItem]
+  expectedSteps: {
+    first?: CheckboxItem[]
+    last?: CheckboxItem[]
+  }
 }
 
+/**
+ * Массив для тестов отображения значений модели
+ * при одиночном использовании не отмеченных полей
+ */
 const SINGLE_UNCHECKED_MODEL_CASES: ReadonlyArray<SingleModelCase> = [
   { title: 'modelValue: undefined', props: { modelValue: undefined } },
   { title: 'modelValue: false', props: { modelValue: false } },
@@ -54,6 +67,10 @@ const SINGLE_UNCHECKED_MODEL_CASES: ReadonlyArray<SingleModelCase> = [
   },
 ]
 
+/**
+ * Массив для тестов отображения значений модели
+ * при одиночном использовании отмеченных полей
+ */
 const SINGLE_CHECKED_MODEL_CASES: ReadonlyArray<SingleModelCase> = [
   { title: 'modelValue: true', props: { modelValue: true } },
   {
@@ -75,6 +92,75 @@ const SINGLE_CHECKED_MODEL_CASES: ReadonlyArray<SingleModelCase> = [
   },
 ]
 
+/** Массив для тестов событий при одиночном использовании не отмеченного поля */
+const SINGLE_UNCHECKED_EVENT_CASES: ReadonlyArray<SingleEventCase> = [
+  {
+    title: 'modelValue: undefined => true, генерируется 1 раз',
+    props: { modelValue: undefined },
+    expected: [true],
+  },
+  {
+    title: 'modelValue: undefined, readonly: true => не генерируется',
+    props: { modelValue: undefined, readonly: true },
+    expected: [],
+  },
+  {
+    title: 'modelValue: true, falseValue: true, trueValue: false => false, генерируется 1 раз',
+    props: { modelValue: true, falseValue: true, trueValue: false },
+    expected: [false],
+  },
+  {
+    title: "modelValue: 'off', falseValue: 'off', trueValue: 'on' => 'on', генерируется 1 раз",
+    props: { modelValue: 'off', falseValue: 'off', trueValue: 'on' },
+    expected: ['on'],
+  },
+  {
+    title:
+      "modelValue: { id: 3, name: 'apple' }, falseValue: { id: 3, name: 'apple' }, trueValue: { id: 2, name: 'lemon' } => { id: 2, name: 'lemon' }, генерируется 1 раз",
+    props: {
+      modelValue: { id: 3, name: 'apple' },
+      falseValue: { id: 3, name: 'apple' },
+      trueValue: { id: 2, name: 'lemon' },
+    },
+    expected: [{ id: 2, name: 'lemon' }],
+  },
+]
+
+/** Массив для тестов событий при одиночном использовании отмеченного поля */
+const SINGLE_CHECKED_EVENT_CASES: ReadonlyArray<SingleEventCase> = [
+  {
+    title: 'modelValue: true => false, генерируется 1 раз',
+    props: { modelValue: true },
+    expected: [false],
+  },
+  {
+    title: 'modelValue: true, readonly: true => не генерируется',
+    props: { modelValue: true, readonly: true },
+    expected: [],
+  },
+  {
+    title: 'modelValue: false, falseValue: true, trueValue: false => true, генерируется 1 раз',
+    props: { modelValue: false, falseValue: true, trueValue: false },
+    expected: [true],
+  },
+  {
+    title: "modelValue: 'on', falseValue: 'off', trueValue: 'on' => 'off', генерируется 1 раз",
+    props: { modelValue: 'on', falseValue: 'off', trueValue: 'on' },
+    expected: ['off'],
+  },
+  {
+    title:
+      "modelValue: { id: 2, name: 'lemon' }, falseValue: { id: 3, name: 'apple' }, trueValue: { id: 2, name: 'lemon' } => { id: 3, name: 'apple' }, генерируется 1 раз",
+    props: {
+      modelValue: { id: 2, name: 'lemon' },
+      falseValue: { id: 3, name: 'apple' },
+      trueValue: { id: 2, name: 'lemon' },
+    },
+    expected: [{ id: 3, name: 'apple' }],
+  },
+]
+
+/** Массив для тестов отображения значений модели при групповом использовании полей */
 const GROUP_MODEL_CASES: ReadonlyArray<GroupModelCase> = [
   {
     title: "modelValue: [], values: [null, 'apple']",
@@ -157,14 +243,14 @@ const GROUP_MODEL_CASES: ReadonlyArray<GroupModelCase> = [
     expected: [false, false],
   },
   {
-    title: 'modelValue: [true], values: [false, true]',
-    props: { modelValue: [true], values: [false, true] },
-    expected: [false, true],
-  },
-  {
     title: 'modelValue: [false], values: [false, true]',
     props: { modelValue: [false], values: [false, true] },
     expected: [true, false],
+  },
+  {
+    title: 'modelValue: [true], values: [false, true]',
+    props: { modelValue: [true], values: [false, true] },
+    expected: [false, true],
   },
   {
     title: 'modelValue: [false, true], values: [false, true]',
@@ -267,69 +353,97 @@ const GROUP_MODEL_CASES: ReadonlyArray<GroupModelCase> = [
   },
 ]
 
-const SINGLE_UNCHECKED_EVENT_CASES: ReadonlyArray<SingleEventCase> = [
+/** Массив для тестов событий при групповом использовании полей */
+const GROUP_EVENT_CASES: ReadonlyArray<GroupEventCase> = [
   {
-    title: 'modelValue: undefined => true, генерируется 1 раз',
-    props: { modelValue: undefined },
-    expected: [true],
+    title: "values: [null, 'apple'], нажатие на первое поле => model на последнем шаге: [null]",
+    values: [null, 'apple'],
+    expectedSteps: { first: [null] },
   },
   {
-    title: 'modelValue: undefined, readonly: true => не генерируется',
-    props: { modelValue: undefined, readonly: true },
-    expected: [],
+    title: "values: [null, 'apple'], нажатие на последнее поле => model на последнем шаге: ['apple']",
+    values: [null, 'apple'],
+    expectedSteps: { last: ['apple'] },
   },
   {
-    title: 'modelValue: true, falseValue: true, trueValue: false => false, генерируется 1 раз',
-    props: { modelValue: true, falseValue: true, trueValue: false },
-    expected: [false],
+    title: "values: [null, 'apple'], нажатия на оба поля => model на последнем шаге: [null, 'apple]",
+    values: [null, 'apple'],
+    expectedSteps: { first: [null], last: [null, 'apple'] },
   },
   {
-    title: "modelValue: 'off', falseValue: 'off', trueValue: 'on' => 'on', генерируется 1 раз",
-    props: { modelValue: 'off', falseValue: 'off', trueValue: 'on' },
-    expected: ['on'],
+    title: "values: ['lemon', 'apple']",
+    values: ['lemon', 'apple'],
+    expectedSteps: { first: ['lemon'] },
   },
   {
-    title:
-      "modelValue: { id: 3, name: 'apple' }, falseValue: { id: 3, name: 'apple' }, trueValue: { id: 2, name: 'lemon' } => { id: 2, name: 'lemon' }, генерируется 1 раз",
-    props: {
-      modelValue: { id: 3, name: 'apple' },
-      falseValue: { id: 3, name: 'apple' },
-      trueValue: { id: 2, name: 'lemon' },
+    title: "values: ['lemon', 'apple']",
+    values: ['lemon', 'apple'],
+    expectedSteps: { last: ['apple'] },
+  },
+  {
+    title: "values: ['lemon', 'apple']",
+    values: ['lemon', 'apple'],
+    expectedSteps: { first: ['lemon'], last: ['lemon', 'apple'] },
+  },
+  {
+    title: 'values: [2, 3]',
+    values: [2, 3],
+    expectedSteps: { first: [2] },
+  },
+  {
+    title: 'values: [2, 3]',
+    values: [2, 3],
+    expectedSteps: { last: [3] },
+  },
+  {
+    title: 'values: [2, 3]',
+    values: [2, 3],
+    expectedSteps: { first: [2], last: [2, 3] },
+  },
+  {
+    title: 'values: [false, true]',
+    values: [false, true],
+    expectedSteps: { first: [false] },
+  },
+  {
+    title: 'values: [false, true]',
+    values: [false, true],
+    expectedSteps: { last: [true] },
+  },
+  {
+    title: 'values: [false, true]',
+    values: [false, true],
+    expectedSteps: { first: [false], last: [false, true] },
+  },
+  {
+    title: "values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]",
+    values: [
+      { id: 2, name: 'lemon' },
+      { id: 3, name: 'apple' },
+    ],
+    expectedSteps: { first: [{ id: 2, name: 'lemon' }] },
+  },
+  {
+    title: "values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]",
+    values: [
+      { id: 2, name: 'lemon' },
+      { id: 3, name: 'apple' },
+    ],
+    expectedSteps: { last: [{ id: 3, name: 'apple' }] },
+  },
+  {
+    title: "values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]",
+    values: [
+      { id: 2, name: 'lemon' },
+      { id: 3, name: 'apple' },
+    ],
+    expectedSteps: {
+      first: [{ id: 2, name: 'lemon' }],
+      last: [
+        { id: 2, name: 'lemon' },
+        { id: 3, name: 'apple' },
+      ],
     },
-    expected: [{ id: 2, name: 'lemon' }],
-  },
-]
-
-const SINGLE_CHECKED_EVENT_CASES: ReadonlyArray<SingleEventCase> = [
-  {
-    title: 'modelValue: true => false, генерируется 1 раз',
-    props: { modelValue: true },
-    expected: [false],
-  },
-  {
-    title: 'modelValue: true, readonly: true => не генерируется',
-    props: { modelValue: true, readonly: true },
-    expected: [],
-  },
-  {
-    title: 'modelValue: false, falseValue: true, trueValue: false => true, генерируется 1 раз',
-    props: { modelValue: false, falseValue: true, trueValue: false },
-    expected: [true],
-  },
-  {
-    title: "modelValue: 'on', falseValue: 'off', trueValue: 'on' => 'off', генерируется 1 раз",
-    props: { modelValue: 'on', falseValue: 'off', trueValue: 'on' },
-    expected: ['off'],
-  },
-  {
-    title:
-      "modelValue: { id: 2, name: 'lemon' }, falseValue: { id: 3, name: 'apple' }, trueValue: { id: 2, name: 'lemon' } => { id: 3, name: 'apple' }, генерируется 1 раз",
-    props: {
-      modelValue: { id: 2, name: 'lemon' },
-      falseValue: { id: 3, name: 'apple' },
-      trueValue: { id: 2, name: 'lemon' },
-    },
-    expected: [{ id: 3, name: 'apple' }],
   },
 ]
 
@@ -527,7 +641,7 @@ test.describe('Отображение значения модели при од�
   })
 })
 
-test.describe.only('Отображение значения модели при групповом использовании', () => {
+test.describe('Отображение значения модели при групповом использовании', () => {
   for (const { expected, props, title } of GROUP_MODEL_CASES) {
     test(title, async ({ mount }) => {
       const component = await mount(GroupScenario, { props })
@@ -714,6 +828,66 @@ test.describe('Генерация событий при одиночном ис�
 
           await component.getByRole('checkbox').click()
           expect(emittedEvents).toEqual(expected)
+        })
+      }
+    })
+  })
+})
+
+test.describe('Генерация событий при групповом использовании', () => {
+  test.describe('Событие keydown при нажатии клавиши Space', () => {
+    test.describe.only('Обычное состояние', () => {
+      for (const { expectedSteps, title, values } of GROUP_EVENT_CASES) {
+        test(title, async ({ mount, page }) => {
+          let modelState: CheckboxItem[] = []
+
+          const component = await mount(GroupScenario, {
+            props: { modelValue: [], values: values },
+            on: { 'update:modelValue': (value: []) => (modelState = value) },
+          })
+
+          const firstInput = component.locator('input.first')
+          const lastInput = component.locator('input.last')
+
+          if (expectedSteps.first) {
+            await firstInput.focus()
+            await page.keyboard.press('Space')
+            expect(modelState).toEqual(expectedSteps?.first)
+          }
+
+          if (expectedSteps.last) {
+            await lastInput.focus()
+            await page.keyboard.press('Space')
+            expect(modelState).toEqual(expectedSteps?.last)
+          }
+        })
+      }
+    })
+
+    test.describe('В состоянии readonly', () => {
+      for (const { expectedSteps, title, values } of GROUP_EVENT_CASES) {
+        test(title, async ({ mount, page }) => {
+          let modelState: CheckboxItem[] = []
+
+          const component = await mount(GroupScenario, {
+            props: { modelValue: [], values, readonly: true },
+            on: { 'update:modelValue': (value: []) => (modelState = value) },
+          })
+
+          const firstInput = component.locator('input.first')
+          const lastInput = component.locator('input.last')
+
+          if (expectedSteps.first) {
+            await firstInput.focus()
+            await page.keyboard.press('Space')
+            expect(modelState).toEqual([])
+          }
+
+          if (expectedSteps.last) {
+            await lastInput.focus()
+            await page.keyboard.press('Space')
+            expect(modelState).toEqual([])
+          }
         })
       }
     })
