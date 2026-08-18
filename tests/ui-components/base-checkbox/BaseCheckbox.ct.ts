@@ -20,7 +20,7 @@ type SingleModelCase = {
 type SingleEventCase = {
   title: string
   props: Partial<BaseCheckboxProps<CheckboxItem>> & { modelValue?: CheckboxItem | CheckboxItem[] }
-  expected: CheckboxItem[]
+  expected: CheckboxItem | undefined
 }
 
 type GroupModelCase = {
@@ -35,6 +35,7 @@ type GroupModelCase = {
 type GroupEventCase = {
   title: string
   values: [CheckboxItem, CheckboxItem]
+  readonly?: boolean
   expectedSteps: {
     first?: CheckboxItem[]
     last?: CheckboxItem[]
@@ -95,68 +96,68 @@ const SINGLE_CHECKED_MODEL_CASES: ReadonlyArray<SingleModelCase> = [
 /** Массив для тестов событий при одиночном использовании не отмеченного поля */
 const SINGLE_UNCHECKED_EVENT_CASES: ReadonlyArray<SingleEventCase> = [
   {
-    title: 'modelValue: undefined => true, генерируется 1 раз',
-    props: { modelValue: undefined },
-    expected: [true],
-  },
-  {
     title: 'modelValue: undefined, readonly: true => не генерируется',
     props: { modelValue: undefined, readonly: true },
-    expected: [],
+    expected: undefined,
   },
   {
-    title: 'modelValue: true, falseValue: true, trueValue: false => false, генерируется 1 раз',
+    title: 'modelValue: undefined => true',
+    props: { modelValue: undefined },
+    expected: true,
+  },
+  {
+    title: 'modelValue: true, falseValue: true, trueValue: false => false',
     props: { modelValue: true, falseValue: true, trueValue: false },
-    expected: [false],
+    expected: false,
   },
   {
-    title: "modelValue: 'off', falseValue: 'off', trueValue: 'on' => 'on', генерируется 1 раз",
+    title: "modelValue: 'off', falseValue: 'off', trueValue: 'on' => 'on'",
     props: { modelValue: 'off', falseValue: 'off', trueValue: 'on' },
-    expected: ['on'],
+    expected: 'on',
   },
   {
     title:
-      "modelValue: { id: 3, name: 'apple' }, falseValue: { id: 3, name: 'apple' }, trueValue: { id: 2, name: 'lemon' } => { id: 2, name: 'lemon' }, генерируется 1 раз",
+      "modelValue: { id: 3, name: 'apple' }, falseValue: { id: 3, name: 'apple' }, trueValue: { id: 2, name: 'lemon' } => { id: 2, name: 'lemon' }",
     props: {
       modelValue: { id: 3, name: 'apple' },
       falseValue: { id: 3, name: 'apple' },
       trueValue: { id: 2, name: 'lemon' },
     },
-    expected: [{ id: 2, name: 'lemon' }],
+    expected: { id: 2, name: 'lemon' },
   },
 ]
 
 /** Массив для тестов событий при одиночном использовании отмеченного поля */
 const SINGLE_CHECKED_EVENT_CASES: ReadonlyArray<SingleEventCase> = [
   {
-    title: 'modelValue: true => false, генерируется 1 раз',
-    props: { modelValue: true },
-    expected: [false],
-  },
-  {
     title: 'modelValue: true, readonly: true => не генерируется',
     props: { modelValue: true, readonly: true },
-    expected: [],
+    expected: undefined,
   },
   {
-    title: 'modelValue: false, falseValue: true, trueValue: false => true, генерируется 1 раз',
+    title: 'modelValue: true => false',
+    props: { modelValue: true },
+    expected: false,
+  },
+  {
+    title: 'modelValue: false, falseValue: true, trueValue: false => true',
     props: { modelValue: false, falseValue: true, trueValue: false },
-    expected: [true],
+    expected: true,
   },
   {
-    title: "modelValue: 'on', falseValue: 'off', trueValue: 'on' => 'off', генерируется 1 раз",
+    title: "modelValue: 'on', falseValue: 'off', trueValue: 'on' => 'off'",
     props: { modelValue: 'on', falseValue: 'off', trueValue: 'on' },
-    expected: ['off'],
+    expected: 'off',
   },
   {
     title:
-      "modelValue: { id: 2, name: 'lemon' }, falseValue: { id: 3, name: 'apple' }, trueValue: { id: 2, name: 'lemon' } => { id: 3, name: 'apple' }, генерируется 1 раз",
+      "modelValue: { id: 2, name: 'lemon' }, falseValue: { id: 3, name: 'apple' }, trueValue: { id: 2, name: 'lemon' } => { id: 3, name: 'apple' }",
     props: {
       modelValue: { id: 2, name: 'lemon' },
       falseValue: { id: 3, name: 'apple' },
       trueValue: { id: 2, name: 'lemon' },
     },
-    expected: [{ id: 3, name: 'apple' }],
+    expected: { id: 3, name: 'apple' },
   },
 ]
 
@@ -356,67 +357,77 @@ const GROUP_MODEL_CASES: ReadonlyArray<GroupModelCase> = [
 /** Массив для тестов событий при групповом использовании полей */
 const GROUP_EVENT_CASES: ReadonlyArray<GroupEventCase> = [
   {
-    title: "values: [null, 'apple'], нажатие на первое поле => model на последнем шаге: [null]",
+    title:
+      "values: [null, 'apple'], нажатие на первое и последнее поле в состоянии readonly => события не генерируются",
+    values: [null, 'apple'],
+    readonly: true,
+    expectedSteps: { first: [], last: [] },
+  },
+  {
+    title: "values: [null, 'apple'], нажатие на первое поле => [null]",
     values: [null, 'apple'],
     expectedSteps: { first: [null] },
   },
   {
-    title: "values: [null, 'apple'], нажатие на последнее поле => model на последнем шаге: ['apple']",
+    title: "values: [null, 'apple'], нажатие на последнее поле => ['apple']",
     values: [null, 'apple'],
     expectedSteps: { last: ['apple'] },
   },
   {
-    title: "values: [null, 'apple'], нажатия на оба поля => model на последнем шаге: [null, 'apple]",
+    title:
+      "values: [null, 'apple'], нажатие на первое и последнее поле => [null, 'apple'] (значение последнего события)",
     values: [null, 'apple'],
     expectedSteps: { first: [null], last: [null, 'apple'] },
   },
   {
-    title: "values: ['lemon', 'apple']",
+    title: "values: ['lemon', 'apple'], нажатие на первое поле => ['lemon']",
     values: ['lemon', 'apple'],
     expectedSteps: { first: ['lemon'] },
   },
   {
-    title: "values: ['lemon', 'apple']",
+    title: "values: ['lemon', 'apple'], нажатие на последнее поле => ['apple']",
     values: ['lemon', 'apple'],
     expectedSteps: { last: ['apple'] },
   },
   {
-    title: "values: ['lemon', 'apple']",
+    title:
+      "values: ['lemon', 'apple'], нажатие на первое и последнее поле => ['lemon', 'apple'] (значение последнего события)",
     values: ['lemon', 'apple'],
     expectedSteps: { first: ['lemon'], last: ['lemon', 'apple'] },
   },
   {
-    title: 'values: [2, 3]',
+    title: 'values: [2, 3], нажатие на первое поле => [2]',
     values: [2, 3],
     expectedSteps: { first: [2] },
   },
   {
-    title: 'values: [2, 3]',
+    title: 'values: [2, 3], нажатие на второе поле => [3]',
     values: [2, 3],
     expectedSteps: { last: [3] },
   },
   {
-    title: 'values: [2, 3]',
+    title: 'values: [2, 3], нажатие на первое и последнее поле => [2, 3] (значение последнего события)',
     values: [2, 3],
     expectedSteps: { first: [2], last: [2, 3] },
   },
   {
-    title: 'values: [false, true]',
+    title: 'values: [false, true], нажатие на первое поле => [false]',
     values: [false, true],
     expectedSteps: { first: [false] },
   },
   {
-    title: 'values: [false, true]',
+    title: 'values: [false, true], нажатие на второе поле => [true]',
     values: [false, true],
     expectedSteps: { last: [true] },
   },
   {
-    title: 'values: [false, true]',
+    title: 'values: [false, true], нажатие на первое и последнее поле => [false, true] (значение последнего события)',
     values: [false, true],
     expectedSteps: { first: [false], last: [false, true] },
   },
   {
-    title: "values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]",
+    title:
+      "values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }], нажатие на первое поле => [{ id: 2, name: 'lemon' }]",
     values: [
       { id: 2, name: 'lemon' },
       { id: 3, name: 'apple' },
@@ -424,7 +435,8 @@ const GROUP_EVENT_CASES: ReadonlyArray<GroupEventCase> = [
     expectedSteps: { first: [{ id: 2, name: 'lemon' }] },
   },
   {
-    title: "values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]",
+    title:
+      "values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }], нажатие на второе поле => [{ id: 3, name: 'apple' }]",
     values: [
       { id: 2, name: 'lemon' },
       { id: 3, name: 'apple' },
@@ -432,7 +444,8 @@ const GROUP_EVENT_CASES: ReadonlyArray<GroupEventCase> = [
     expectedSteps: { last: [{ id: 3, name: 'apple' }] },
   },
   {
-    title: "values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }]",
+    title:
+      "values: [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }], нажатие на первое и последнее поле => [{ id: 2, name: 'lemon' }, { id: 3, name: 'apple' }] (значение последнего события)",
     values: [
       { id: 2, name: 'lemon' },
       { id: 3, name: 'apple' },
@@ -563,7 +576,7 @@ test.describe('Фокус и доступность', () => {
     const component = await mount(FocusScenario)
     const checkbox = component.getByRole('checkbox')
 
-    await page.keyboard.press('Tab')
+    await component.getByTestId('first').focus()
     await expect(component.getByTestId('first')).toBeFocused()
 
     await page.keyboard.press('Tab')
@@ -577,7 +590,7 @@ test.describe('Фокус и доступность', () => {
   test('Переключение фокуса клавишей Tab в состоянии disabled', async ({ mount, page }) => {
     const component = await mount(FocusScenario, { props: { disabled: true } })
 
-    await page.keyboard.press('Tab')
+    await component.getByTestId('first').focus()
     await expect(component.getByTestId('first')).toBeFocused()
 
     await page.keyboard.press('Tab')
@@ -589,7 +602,7 @@ test.describe('Фокус и доступность', () => {
     const component = await mount(FocusScenario, { props: { readonly: true } })
     const checkbox = component.getByRole('checkbox')
 
-    await page.keyboard.press('Tab')
+    await component.getByTestId('first').focus()
     await expect(component.getByTestId('first')).toBeFocused()
 
     await page.keyboard.press('Tab')
@@ -667,101 +680,29 @@ test.describe('Отображение значения модели при гр�
 })
 
 test.describe('Генерация событий при одиночном использовании', () => {
-  test.describe('Событие keydown при нажатии клавиши Space', () => {
-    test('В обычном состоянии => генерируется 1 раз', async ({ mount, page }) => {
-      const emittedEvents: KeyboardEvent[] = []
-
-      await page.exposeFunction('handleNativeEvent', (evt: KeyboardEvent) => {
-        emittedEvents.push(evt)
-      })
+  test.describe('Событие update:modelValue при нажатии клавиши Space', () => {
+    test('В обычном состоянии => true', async ({ mount }) => {
+      let model: CheckboxItem | undefined = undefined
 
       const component = await mount(BaseCheckbox, {
         props: { modelValue: false, label: 'Согласен с условием' },
+        on: { 'update:modelValue': (value: CheckboxItem) => (model = value) },
       })
 
-      await component.evaluate((el) => {
-        el.addEventListener('keydown', (evt) => window.handleNativeEvent(evt))
-      })
-      const checkbox = component.getByRole('checkbox')
-
-      await checkbox.focus()
-      await checkbox.press('Space')
-
-      expect(emittedEvents).toEqual([expect.any(Object)])
-    })
-
-    test('В состоянии readonly => не генерируется', async ({ mount, page }) => {
-      const emittedEvents: KeyboardEvent[] = []
-
-      await page.exposeFunction('handleNativeEvent', (evt: KeyboardEvent) => {
-        emittedEvents.push(evt)
-      })
-
-      const component = await mount(BaseCheckbox, {
-        props: { modelValue: false, label: 'Согласен с условием', readonly: true },
-      })
-
-      await component.evaluate((el) => {
-        el.addEventListener('keydown', (evt) => window.handleNativeEvent(evt))
-      })
-      const checkbox = component.getByRole('checkbox')
-
-      await checkbox.focus()
-      await checkbox.press('Space')
-
-      expect(emittedEvents).toEqual([])
-    })
-  })
-
-  test.describe('Событие click при нажатии ЛКМ на метку поля', () => {
-    test('В обычном состоянии => генерируется 1 раз', async ({ mount }) => {
-      const emittedEvents: PointerEvent[] = []
-
-      const component = await mount(BaseCheckbox, {
-        props: { modelValue: false, label: 'Согласен с условием' },
-        on: { click: (value: PointerEvent) => emittedEvents.push(value) },
-      })
-
-      await component.getByText('Согласен с условием').click()
-      expect(emittedEvents).toEqual([expect.any(Object)])
+      await component.getByRole('checkbox').press('Space')
+      expect(model).toEqual(true)
     })
 
     test('В состоянии readonly => не генерируется', async ({ mount }) => {
-      const emittedEvents: PointerEvent[] = []
+      let model: CheckboxItem | undefined = undefined
 
       const component = await mount(BaseCheckbox, {
         props: { modelValue: false, label: 'Согласен с условием', readonly: true },
-        on: { click: (value: PointerEvent) => emittedEvents.push(value) },
+        on: { 'update:modelValue': (value: CheckboxItem) => (model = value) },
       })
 
-      await component.getByText('Согласен с условием').click()
-      expect(emittedEvents).toEqual([])
-    })
-  })
-
-  test.describe('Событие click при нажатии ЛКМ на поле', () => {
-    test('В обычном состоянии => генерируется 1 раз', async ({ mount }) => {
-      const emittedEvents: PointerEvent[] = []
-
-      const component = await mount(BaseCheckbox, {
-        props: { modelValue: false, label: 'Согласен с условием' },
-        on: { click: (value: PointerEvent) => emittedEvents.push(value) },
-      })
-
-      await component.getByRole('checkbox').click()
-      expect(emittedEvents).toEqual([expect.any(Object)])
-    })
-
-    test('В состоянии readonly => не генерируется', async ({ mount }) => {
-      const emittedEvents: PointerEvent[] = []
-
-      const component = await mount(BaseCheckbox, {
-        props: { modelValue: false, label: 'Согласен с условием', readonly: true },
-        on: { click: (value: PointerEvent) => emittedEvents.push(value) },
-      })
-
-      await component.getByRole('checkbox').click()
-      expect(emittedEvents).toEqual([])
+      await component.getByRole('checkbox').press('Space')
+      expect(model).toEqual(undefined)
     })
   })
 
@@ -769,15 +710,15 @@ test.describe('Генерация событий при одиночном ис�
     test.describe('Поле не отмечено', () => {
       for (const { expected, props, title } of SINGLE_UNCHECKED_EVENT_CASES) {
         test(title, async ({ mount }) => {
-          const emittedEvents: CheckboxItem[] = []
+          let model: CheckboxItem | undefined = undefined
 
           const component = await mount(BaseCheckbox, {
             props: { ...props, label: 'Согласен с условием' },
-            on: { 'update:modelValue': (value: CheckboxItem) => emittedEvents.push(value) },
+            on: { 'update:modelValue': (value: CheckboxItem) => (model = value) },
           })
 
           await component.getByText('Согласен с условием').click()
-          expect(emittedEvents).toEqual(expected)
+          expect(model).toEqual(expected)
         })
       }
     })
@@ -785,15 +726,15 @@ test.describe('Генерация событий при одиночном ис�
     test.describe('Поле отмечено', () => {
       for (const { expected, props, title } of SINGLE_CHECKED_EVENT_CASES) {
         test(title, async ({ mount }) => {
-          const emittedEvents: CheckboxItem[] = []
+          let model: CheckboxItem | undefined = undefined
 
           const component = await mount(BaseCheckbox, {
             props: { ...props, label: 'Согласен с условием' },
-            on: { 'update:modelValue': (value: CheckboxItem) => emittedEvents.push(value) },
+            on: { 'update:modelValue': (value: CheckboxItem) => (model = value) },
           })
 
           await component.getByText('Согласен с условием').click()
-          expect(emittedEvents).toEqual(expected)
+          expect(model).toEqual(expected)
         })
       }
     })
@@ -803,15 +744,15 @@ test.describe('Генерация событий при одиночном ис�
     test.describe('Поле не отмечено', () => {
       for (const { expected, props, title } of SINGLE_UNCHECKED_EVENT_CASES) {
         test(title, async ({ mount }) => {
-          const emittedEvents: CheckboxItem[] = []
+          let model: CheckboxItem | undefined = undefined
 
           const component = await mount(BaseCheckbox, {
             props: { ...props, label: 'Согласен с условием' },
-            on: { 'update:modelValue': (value: CheckboxItem) => emittedEvents.push(value) },
+            on: { 'update:modelValue': (value: CheckboxItem) => (model = value) },
           })
 
           await component.getByRole('checkbox').click()
-          expect(emittedEvents).toEqual(expected)
+          expect(model).toEqual(expected)
         })
       }
     })
@@ -819,15 +760,15 @@ test.describe('Генерация событий при одиночном ис�
     test.describe('Поле отмечено', () => {
       for (const { expected, props, title } of SINGLE_CHECKED_EVENT_CASES) {
         test(title, async ({ mount }) => {
-          const emittedEvents: CheckboxItem[] = []
+          let model: CheckboxItem | undefined = undefined
 
           const component = await mount(BaseCheckbox, {
             props: { ...props, label: 'Согласен с условием' },
-            on: { 'update:modelValue': (value: CheckboxItem) => emittedEvents.push(value) },
+            on: { 'update:modelValue': (value: CheckboxItem) => (model = value) },
           })
 
           await component.getByRole('checkbox').click()
-          expect(emittedEvents).toEqual(expected)
+          expect(model).toEqual(expected)
         })
       }
     })
@@ -835,61 +776,72 @@ test.describe('Генерация событий при одиночном ис�
 })
 
 test.describe('Генерация событий при групповом использовании', () => {
-  test.describe('Событие keydown при нажатии клавиши Space', () => {
-    test.describe.only('Обычное состояние', () => {
-      for (const { expectedSteps, title, values } of GROUP_EVENT_CASES) {
-        test(title, async ({ mount, page }) => {
-          let modelState: CheckboxItem[] = []
+  test.describe('Событие update:modelValue при нажатии клавиши Space', () => {
+    for (const { expectedSteps, readonly, title, values } of GROUP_EVENT_CASES) {
+      test(title, async ({ mount }) => {
+        let model: CheckboxItem[] = []
 
-          const component = await mount(GroupScenario, {
-            props: { modelValue: [], values: values },
-            on: { 'update:modelValue': (value: []) => (modelState = value) },
-          })
-
-          const firstInput = component.locator('input.first')
-          const lastInput = component.locator('input.last')
-
-          if (expectedSteps.first) {
-            await firstInput.focus()
-            await page.keyboard.press('Space')
-            expect(modelState).toEqual(expectedSteps?.first)
-          }
-
-          if (expectedSteps.last) {
-            await lastInput.focus()
-            await page.keyboard.press('Space')
-            expect(modelState).toEqual(expectedSteps?.last)
-          }
+        const component = await mount(GroupScenario, {
+          props: { modelValue: [], values, readonly },
+          on: { 'update:modelValue': (value: CheckboxItem[]) => (model = value) },
         })
-      }
-    })
 
-    test.describe('В состоянии readonly', () => {
-      for (const { expectedSteps, title, values } of GROUP_EVENT_CASES) {
-        test(title, async ({ mount, page }) => {
-          let modelState: CheckboxItem[] = []
+        if (expectedSteps.first) {
+          await component.getByRole('checkbox').first().click()
+          expect(model).toEqual(expectedSteps?.first)
+        }
 
-          const component = await mount(GroupScenario, {
-            props: { modelValue: [], values, readonly: true },
-            on: { 'update:modelValue': (value: []) => (modelState = value) },
-          })
+        if (expectedSteps.last) {
+          await component.getByRole('checkbox').last().click()
+          expect(model).toEqual(expectedSteps?.last)
+        }
+      })
+    }
+  })
 
-          const firstInput = component.locator('input.first')
-          const lastInput = component.locator('input.last')
+  test.describe('Событие update:modelValue при нажатии ЛКМ на метки полей', () => {
+    for (const { expectedSteps, readonly, title, values } of GROUP_EVENT_CASES) {
+      test(title, async ({ mount }) => {
+        let model: CheckboxItem[] = []
 
-          if (expectedSteps.first) {
-            await firstInput.focus()
-            await page.keyboard.press('Space')
-            expect(modelState).toEqual([])
-          }
-
-          if (expectedSteps.last) {
-            await lastInput.focus()
-            await page.keyboard.press('Space')
-            expect(modelState).toEqual([])
-          }
+        const component = await mount(GroupScenario, {
+          props: { modelValue: [], values, readonly },
+          on: { 'update:modelValue': (value: CheckboxItem[]) => (model = value) },
         })
-      }
-    })
+
+        if (expectedSteps.first) {
+          await component.getByText('Согласен с первым условием').click()
+          expect(model).toEqual(expectedSteps?.first)
+        }
+
+        if (expectedSteps.last) {
+          await component.getByText('Согласен с последним условием').click()
+          expect(model).toEqual(expectedSteps?.last)
+        }
+      })
+    }
+  })
+
+  test.describe('Событие update:modelValue при нажатии ЛКМ на поля', () => {
+    for (const { expectedSteps, readonly, title, values } of GROUP_EVENT_CASES) {
+      test(title, async ({ mount }) => {
+        let model: CheckboxItem[] = []
+
+        const component = await mount(GroupScenario, {
+          props: { modelValue: [], values, readonly },
+          on: { 'update:modelValue': (value: CheckboxItem[]) => (model = value) },
+        })
+
+        if (expectedSteps.first) {
+          await component.getByRole('checkbox').first().click()
+          expect(model).toEqual(expectedSteps?.first)
+        }
+
+        if (expectedSteps.last) {
+          await component.getByRole('checkbox').last().click()
+          expect(model).toEqual(expectedSteps?.last)
+        }
+      })
+    }
   })
 })

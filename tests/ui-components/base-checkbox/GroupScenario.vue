@@ -14,7 +14,19 @@ const model = defineModel<CheckboxItem[]>()
 <template>
   <div>
     <div>model: {{ model }}</div>
-    <BaseCheckbox v-model="model" :classes="{ input: 'first' }" :readonly :value="values[0]" />
-    <BaseCheckbox v-model="model" :classes="{ input: 'last' }" :readonly :value="values[1]" />
+    <BaseCheckbox
+      v-model="model"
+      :classes="{ input: 'first' }"
+      label="Согласен с первым условием"
+      :readonly
+      :value="values[0]"
+    />
+    <BaseCheckbox
+      v-model="model"
+      :classes="{ input: 'last' }"
+      label="Согласен с последним условием"
+      :readonly
+      :value="values[1]"
+    />
   </div>
 </template>
