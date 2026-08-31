@@ -26,18 +26,10 @@ const emit = defineEmits<BaseCheckboxEmits>()
 function onInputClick(evt: PointerEvent) {
   if (readonly) {
     evt.preventDefault()
-    evt.stopPropagation()
     return
   }
 
   emit('click', evt)
-}
-
-function onInputKeydownSpace(evt: KeyboardEvent) {
-  if (readonly) {
-    evt.preventDefault()
-    evt.stopPropagation()
-  }
 }
 </script>
 
@@ -59,7 +51,6 @@ function onInputKeydownSpace(evt: KeyboardEvent) {
       type="checkbox"
       :value
       @click="onInputClick"
-      @keydown.space="onInputKeydownSpace"
     />
 
     <slot name="control"></slot>

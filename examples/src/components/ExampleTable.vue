@@ -81,6 +81,6 @@ const COLS: TableCol<(typeof rows.value)[number]>[] = [
     :rows="rows"
   >
     <!-- #endregion example-table-template -->
-    <template #empty> Таблица пуста </template>
+    <template #empty>Таблица пуста</template>
   </BaseTable>
 </template>
